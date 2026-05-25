@@ -124,7 +124,7 @@ cat("Delimited clusters:", length(out), "\n")
 
 3. **Interactive diagnostics**  
    - Run `bgmyc.singlephy()` on one tree  
-   - Check acceptance rates (optimal: `0.20–0.40`)  
+   - Check acceptance rates and ESS  
    - Evaluate trace plots (`plot(result)`)  
    - Tune parameters with biological hints
 
@@ -206,13 +206,10 @@ compiler::enableJIT(3)  # +2–3% speedup on all MCMC loops, no code changes
 | `Your input tree is not ultrametric` | Use `fix_ultrametric()` or check BEAST2 export settings |
 | `start[3] out of bounds` | Ensure `t1 < start[3] < t2`; script auto-clamps values |
 | `Error in read.nexus` | Verify files are Nexus format; use `read.tree()` for Newick |
-| `future::evalFuture() failed` | Run `devtools::install()` before `load_all()`; ensure package is in library |
-| Slow post-processing | Update to v4.1.0 for pure-R optimizations in `bgmyc.spec()` |
 | Non-ASCII warning in check | All R code now uses ASCII-only; comments may contain UTF-8 |
 | `Error: package 'ape' is not available` | Run `install.packages("ape")` first |
-| `future::evalFuture() failed` | Ensure package is installed via `devtools::install()`, not just `load_all()` |
+| `future::evalFuture() failed` | Ensure package is installed |
 | `Non-ASCII characters in Rd file` | All R code is ASCII; comments may contain UTF-8 — this is CRAN-compliant |
-| `ESS < 200` or `R̂ > 1.05` | Install `mcmcse`, then increase `mcmc` or `burnin` as prompted by the diagnostic loop |
 | `ESS: package 'mcmcse' not installed` | Run `install.packages("mcmcse")`. The package works without it, but full convergence stats require it. |
 
 ---
