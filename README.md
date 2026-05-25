@@ -18,7 +18,7 @@ bGMYC4 implements a Bayesian version of the General Mixed Yule-Coalescent model 
 | Feature | Description |
 |---------|-------------|
 | 🌲 Single & Multi-tree analysis | Run GMYC on one tree or pool uncertainty across multiple BEAST2 trees |
-| 📊 Interactive diagnostics | RReal-time MCMC checks: trace plots, acceptance rates, ESS, Gelman-Rubin R̂, auto-tuning hints |
+| 📊 Interactive diagnostics | Real-time MCMC checks: trace plots, acceptance rates, ESS, Gelman-Rubin R̂, auto-tuning hints |
 | ⚙️ Parameter tuning | Safe input handlers with biological hints for priors, scales, and thresholds |
 | 🌡️ Heatmap visualization | Conspecificity probability matrices ordered by tree topology |
 | 🌐 Bilingual workflow | Full EN/RU documentation and interactive vignette |
