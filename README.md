@@ -45,7 +45,7 @@ remotes::install_github("dkarabanow-creator/bGMYC4", build_vignettes = TRUE)
 ```r
 install.packages("path/to/bGMYC4_4.1.0.tar.gz", repos = NULL, type = "source")
 # To build vignettes locally:
-# install.packages("path/to/bGMYC4_4.1.0.tar.gz", repos = NULL, type = "source", build_vignettes = TRUE)
+# install.packages("path/to/bGMYC4.tar.gz", repos = NULL, type = "source", build_vignettes = TRUE)
 ```
 
 ### 🔹 System requirements
