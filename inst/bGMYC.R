@@ -306,4 +306,20 @@ for (i in seq_along(out)[1:min(10, length(out))]) {
   cat(sprintf("   %2d: %s%s\n", i, paste(taxa[1:min(3, length(taxa))], collapse = ", "),
               if (length(taxa) > 3) "..." else ""))
 }
+
+cat("📋Полный результат делимитации:")
+print(out)
+
+# Превращаем список 'out' в таблицу и сохраняем
+df <- data.frame(
+  Sequence   = unlist(out),
+  MOTU_bGMYC = rep(seq_along(out), sapply(out, length))
+)
+
+write.table(df, 
+            file = "C:/GEN/Bosmina/Delimitation/Delimitation_bGMYC.csv",
+            sep = ";", row.names = FALSE, quote = FALSE, fileEncoding = "UTF-8")
+
+cat(sprintf("✅ Сохранено: %d таксонов, %d MOTU\n", nrow(df), length(out)))
+
 cat("\n🎉 Интерактивный анализ bGMYC4 завершён!\n")
