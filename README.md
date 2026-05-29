@@ -38,7 +38,7 @@ bGMYC4 implements a Bayesian version of the General Mixed Yule-Coalescent model 
 if (!requireNamespace("remotes", quietly = TRUE)) {
   install.packages("remotes")
 }
-remotes::install_github("dkarabanow-creator/bGMYC4", build_vignettes = TRUE)
+remotes::install_github("DmitryKarabanov/bGMYC4", build_vignettes = TRUE)
 ```
 
 ### 🔹 From source archive
@@ -224,7 +224,7 @@ compiler::enableJIT(3)  # +2–3% speedup on all MCMC loops, no code changes
   author = {Karabanov, Dmitry},
   year = {2026},
   note = {R package version 4.1.0. Developed with assistance from Qwen3.6 AI assistant.},
-  url = {https://github.com/dkarabanow-creator/bGMYC4},
+  url = {https://github.com/DmitryKarabanov/bGMYC4},
  }
 ```
 
