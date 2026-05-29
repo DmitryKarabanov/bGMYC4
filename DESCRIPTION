@@ -27,4 +27,4 @@ Author: Noah Reid [aut] (Original author of bGMYC),
   Dmitry Karabanov [aut, cre] (Maintainer of bGMYC4),
   Qwen 3.6 [ctb] (Code modernization and R 4.x compatibility)
 Maintainer: Dmitry Karabanov <dk@ibiw.ru>
-Depends: R (>= 3.5.0)
+Depends: R (>= 4.0)
