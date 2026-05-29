@@ -5,7 +5,7 @@ citEntry(
                   email = "dk@ibiw.ru",  
                   comment = c(ORCID = "0000-0001-6008-7441")),
   year = "2026",
-  url = "https://github.com/dkarabanow-creator/bGMYC4",
+  url = "https://github.com/DmitryKarabanov/bGMYC4",
   textVersion = paste0(
     "Karabanov D (", format(Sys.Date(), "%Y"), "). bGMYC4: Bayesian General Mixed ",
     "Yule-Coalescent Model for Species Delimitation. R package version 4.1.0, ",
