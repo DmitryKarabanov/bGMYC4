@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Dmitry Karabanov &amp; Qwen" />
+
+<meta name="date" content="2026-06-01" />
+
+<title>bGMYC4 Interactive Workflow / Интерактивный рабочий процесс bGMYC4</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">bGMYC4 Interactive Workflow / Интерактивный
+рабочий процесс bGMYC4</h1>
+<h4 class="author">Dmitry Karabanov &amp; Qwen</h4>
+<h4 class="date">2026-06-01</h4>
+
+
+
+<div id="introduction-введение" class="section level2">
+<h2>🌍 Introduction / Введение</h2>
+<p><strong>EN:</strong> This vignette documents the complete interactive
+workflow for Bayesian species delimitation using bGMYC4. It guides you
+through data selection, tree preprocessing (BEAST2 annotations),
+interactive MCMC diagnostics with parameter auto-tuning, multi-tree
+uncertainty pooling via parallel computing, and custom interactive
+visualization. <strong>RU:</strong> Эта виньетка описывает полный
+интерактивный рабочий процесс байесовской делимитации видов с помощью
+bGMYC4. Она проведёт вас через выбор данных, предобработку деревьев
+(аннотации BEAST2), интерактивную диагностику MCMC с автонастройкой
+параметров, усреднение филогенетической неопределённости через
+параллельные вычисления и кастомную интерактивную визуализацию.<br />
+—</p>
+</div>
+<div id="setup-helper-functions-настройка-окружения-и-вспомогательные-функции" class="section level2">
+<h2>1. Setup &amp; Helper Functions / Настройка окружения и
+вспомогательные функции</h2>
+<p><strong>EN:</strong> Load required libraries and define safe input
+handlers. The workflow automatically cleans BEAST2 annotations, checks
+ultrametricity, and validates parameter bounds.<br />
+<strong>RU:</strong> Загрузка библиотек и определение безопасных
+обработчиков ввода. Рабочий процесс автоматически очищает аннотации
+BEAST2, проверяет ультраметричность и валидирует границы параметров.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>compiler<span class="sc">::</span><span class="fu">enableJIT</span>(<span class="dv">3</span>) <span class="co"># JIT acceleration / Ускорение JIT</span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(ape)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="fu">library</span>(bGMYC4)</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="fu">library</span>(treeio)</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="fu">library</span>(ggtree)</span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="fu">library</span>(plotly)</span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="fu">library</span>(htmlwidgets)</span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a><span class="fu">library</span>(future)</span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a><span class="fu">library</span>(future.apply)</span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a><span class="fu">library</span>(mcmcse)</span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a><span class="co"># EN: Safe numeric scalar input / Безопасный ввод скалярных значений</span></span>
+<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a>input_scalar <span class="ot">&lt;-</span> <span class="cf">function</span>(label, default_val) {</span>
+<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">interactive</span>()) <span class="fu">return</span>(default_val)</span>
+<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a>  val <span class="ot">&lt;-</span> <span class="fu">readline</span>(<span class="fu">sprintf</span>(<span class="st">&quot;  %s (default / по умолчанию: %s): &quot;</span>, label, default_val))</span>
+<span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">nchar</span>(<span class="fu">trimws</span>(val)) <span class="sc">==</span> <span class="dv">0</span>) <span class="fu">return</span>(default_val)</span>
+<span id="cb1-18"><a href="#cb1-18" tabindex="-1"></a>  num <span class="ot">&lt;-</span> <span class="fu">suppressWarnings</span>(<span class="fu">as.numeric</span>(val))</span>
+<span id="cb1-19"><a href="#cb1-19" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">is.na</span>(num)) <span class="fu">return</span>(default_val)</span>
+<span id="cb1-20"><a href="#cb1-20" tabindex="-1"></a>  <span class="fu">return</span>(num)</span>
+<span id="cb1-21"><a href="#cb1-21" tabindex="-1"></a>}</span>
+<span id="cb1-22"><a href="#cb1-22" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" tabindex="-1"></a><span class="co"># EN: Safe numeric vector input / Безопасный ввод векторов</span></span>
+<span id="cb1-24"><a href="#cb1-24" tabindex="-1"></a>input_vector <span class="ot">&lt;-</span> <span class="cf">function</span>(label, default_vec) {</span>
+<span id="cb1-25"><a href="#cb1-25" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">interactive</span>()) <span class="fu">return</span>(default_vec)</span>
+<span id="cb1-26"><a href="#cb1-26" tabindex="-1"></a>  val <span class="ot">&lt;-</span> <span class="fu">readline</span>(<span class="fu">sprintf</span>(<span class="st">&quot;  %s (comma-separated, default / через запятую, по умолчанию: %s): &quot;</span>, </span>
+<span id="cb1-27"><a href="#cb1-27" tabindex="-1"></a>                          label, <span class="fu">paste</span>(default_vec, <span class="at">collapse =</span> <span class="st">&quot;, &quot;</span>)))</span>
+<span id="cb1-28"><a href="#cb1-28" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">nchar</span>(<span class="fu">trimws</span>(val)) <span class="sc">==</span> <span class="dv">0</span>) <span class="fu">return</span>(default_vec)</span>
+<span id="cb1-29"><a href="#cb1-29" tabindex="-1"></a>  nums <span class="ot">&lt;-</span> <span class="fu">suppressWarnings</span>(<span class="fu">as.numeric</span>(<span class="fu">unlist</span>(<span class="fu">strsplit</span>(val, <span class="st">&quot;[,;</span><span class="sc">\\</span><span class="st">s]+&quot;</span>))))</span>
+<span id="cb1-30"><a href="#cb1-30" tabindex="-1"></a>  nums <span class="ot">&lt;-</span> nums[<span class="sc">!</span><span class="fu">is.na</span>(nums)]</span>
+<span id="cb1-31"><a href="#cb1-31" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(nums) <span class="sc">!=</span> <span class="fu">length</span>(default_vec)) <span class="fu">return</span>(default_vec)</span>
+<span id="cb1-32"><a href="#cb1-32" tabindex="-1"></a>  <span class="fu">return</span>(nums)</span>
+<span id="cb1-33"><a href="#cb1-33" tabindex="-1"></a>}</span>
+<span id="cb1-34"><a href="#cb1-34" tabindex="-1"></a></span>
+<span id="cb1-35"><a href="#cb1-35" tabindex="-1"></a><span class="co"># EN: Enforce ultrametricity / Обеспечение ультраметричности</span></span>
+<span id="cb1-36"><a href="#cb1-36" tabindex="-1"></a>fix_ultrametric <span class="ot">&lt;-</span> <span class="cf">function</span>(tr) {</span>
+<span id="cb1-37"><a href="#cb1-37" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.ultrametric</span>(tr)) {</span>
+<span id="cb1-38"><a href="#cb1-38" tabindex="-1"></a>    tr<span class="sc">$</span>edge.length <span class="ot">&lt;-</span> <span class="fu">round</span>(tr<span class="sc">$</span>edge.length, <span class="dv">8</span>)</span>
+<span id="cb1-39"><a href="#cb1-39" tabindex="-1"></a>    <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.ultrametric</span>(tr)) <span class="fu">stop</span>(<span class="st">&quot;❌ Tree remains non-ultrametric / Дерево остаётся неультраметричным.&quot;</span>)</span>
+<span id="cb1-40"><a href="#cb1-40" tabindex="-1"></a>  }</span>
+<span id="cb1-41"><a href="#cb1-41" tabindex="-1"></a>  <span class="fu">return</span>(tr)</span>
+<span id="cb1-42"><a href="#cb1-42" tabindex="-1"></a>}</span></code></pre></div>
+<hr />
+</div>
+<div id="data-selection-tree-preprocessing-выбор-данных-и-предобработка-деревьев" class="section level2">
+<h2>2. Data Selection &amp; Tree Preprocessing / Выбор данных и
+предобработка деревьев</h2>
+<p><strong>EN:</strong> Load consensus tree with BEAST2 annotations (for
+posterior visualization).<br />
+<strong>RU:</strong> Загрузка консенсусного дерева с аннотациями BEAST2
+(для визуализации posterior).</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>consensus_path <span class="ot">&lt;-</span> <span class="cf">if</span> (<span class="fu">interactive</span>()) <span class="fu">readline</span>(<span class="st">&quot;📥 Path to consensus tree / Путь к консенсусному дереву (.tree): &quot;</span>) <span class="cf">else</span> <span class="st">&quot;dummy.tree&quot;</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>posterior_path <span class="ot">&lt;-</span> <span class="cf">if</span> (<span class="fu">interactive</span>()) <span class="fu">readline</span>(<span class="st">&quot;📥 Path to posterior trees / Путь к набору деревьев (.trees): &quot;</span>) <span class="cf">else</span> <span class="st">&quot;dummy.trees&quot;</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>tree_beast <span class="ot">&lt;-</span> treeio<span class="sc">::</span><span class="fu">read.beast</span>(consensus_path)</span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>tree_consensus <span class="ot">&lt;-</span> tree_beast<span class="sc">@</span>phylo</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>all_trees <span class="ot">&lt;-</span> <span class="fu">read.nexus</span>(posterior_path)</span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="fu">class</span>(all_trees) <span class="ot">&lt;-</span> <span class="st">&quot;multiPhylo&quot;</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="co"># EN: Analysis Mode Selection / Выбор режима анализа</span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a>mode_str <span class="ot">&lt;-</span> <span class="cf">if</span> (<span class="fu">interactive</span>()) <span class="fu">readline</span>(<span class="st">&quot;Mode 1 (Single) or 2 (Multi)? / Режим 1 или 2? [2]: &quot;</span>) <span class="cf">else</span> <span class="st">&quot;2&quot;</span></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a>analysis_mode <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">nchar</span>(<span class="fu">trimws</span>(mode_str)) <span class="sc">==</span> <span class="dv">0</span>, <span class="dv">2</span>, <span class="fu">as.integer</span>(mode_str))</span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="co"># EN: Tree sampling with burnin / Выборка деревьев с учетом burnin</span></span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="cf">if</span> (analysis_mode <span class="sc">==</span> <span class="dv">2</span>) {</span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a>  n_total <span class="ot">&lt;-</span> <span class="fu">length</span>(all_trees)</span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a>  burnin_idx <span class="ot">&lt;-</span> <span class="fu">floor</span>(n_total <span class="sc">*</span> <span class="fl">0.10</span>) <span class="co"># 10% burnin</span></span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a>  n_sample <span class="ot">&lt;-</span> <span class="fu">input_scalar</span>(<span class="st">&quot;Number of trees to sample / Кол-во деревьев&quot;</span>, <span class="dv">10</span>)</span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a>  <span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a>  trees_sample <span class="ot">&lt;-</span> all_trees[<span class="fu">sample</span>((burnin_idx <span class="sc">+</span> <span class="dv">1</span>)<span class="sc">:</span>n_total, n_sample)]</span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a>  <span class="fu">class</span>(trees_sample) <span class="ot">&lt;-</span> <span class="st">&quot;multiPhylo&quot;</span></span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a>  trees_sample <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a>}</span>
+<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a></span>
+<span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a><span class="co"># EN: Outgroup removal via regex patterns / Удаление аутгрупп по паттернам</span></span>
+<span id="cb2-26"><a href="#cb2-26" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">interactive</span>() <span class="sc">&amp;&amp;</span> <span class="fu">tolower</span>(<span class="fu">readline</span>(<span class="st">&quot;Drop outgroups? / Удалять аутгруппы? (y/n): &quot;</span>)) <span class="sc">==</span> <span class="st">&quot;y&quot;</span>) {</span>
+<span id="cb2-27"><a href="#cb2-27" tabindex="-1"></a>  og_str <span class="ot">&lt;-</span> <span class="fu">readline</span>(<span class="st">&quot;Enter patterns (comma-separated) / Введите паттерны: &quot;</span>)</span>
+<span id="cb2-28"><a href="#cb2-28" tabindex="-1"></a>  og_patterns <span class="ot">&lt;-</span> <span class="fu">trimws</span>(<span class="fu">unlist</span>(<span class="fu">strsplit</span>(og_str, <span class="st">&quot;[,;]+&quot;</span>)))</span>
+<span id="cb2-29"><a href="#cb2-29" tabindex="-1"></a>  matching_tips <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">unlist</span>(<span class="fu">lapply</span>(og_patterns, <span class="cf">function</span>(p) {</span>
+<span id="cb2-30"><a href="#cb2-30" tabindex="-1"></a>    pattern <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;(^|[^A-Za-z0-9])&quot;</span>, p, <span class="st">&quot;($|[^A-Za-z0-9])&quot;</span>)</span>
+<span id="cb2-31"><a href="#cb2-31" tabindex="-1"></a>    tree_consensus<span class="sc">$</span>tip.label[<span class="fu">grepl</span>(pattern, tree_consensus<span class="sc">$</span>tip.label, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>, <span class="at">perl =</span> <span class="cn">TRUE</span>)]</span>
+<span id="cb2-32"><a href="#cb2-32" tabindex="-1"></a>  })))</span>
+<span id="cb2-33"><a href="#cb2-33" tabindex="-1"></a>  </span>
+<span id="cb2-34"><a href="#cb2-34" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(matching_tips) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb2-35"><a href="#cb2-35" tabindex="-1"></a>    tree_consensus <span class="ot">&lt;-</span> <span class="fu">drop.tip</span>(tree_consensus, matching_tips)</span>
+<span id="cb2-36"><a href="#cb2-36" tabindex="-1"></a>    <span class="cf">if</span> (analysis_mode <span class="sc">==</span> <span class="dv">2</span>) {</span>
+<span id="cb2-37"><a href="#cb2-37" tabindex="-1"></a>      trees_sample <span class="ot">&lt;-</span> <span class="fu">lapply</span>(trees_sample, drop.tip, <span class="at">tip =</span> matching_tips)</span>
+<span id="cb2-38"><a href="#cb2-38" tabindex="-1"></a>      <span class="fu">class</span>(trees_sample) <span class="ot">&lt;-</span> <span class="st">&quot;multiPhylo&quot;</span></span>
+<span id="cb2-39"><a href="#cb2-39" tabindex="-1"></a>    }</span>
+<span id="cb2-40"><a href="#cb2-40" tabindex="-1"></a>    tree_beast <span class="ot">&lt;-</span> treeio<span class="sc">::</span><span class="fu">drop.tip</span>(tree_beast, matching_tips)</span>
+<span id="cb2-41"><a href="#cb2-41" tabindex="-1"></a>  }</span>
+<span id="cb2-42"><a href="#cb2-42" tabindex="-1"></a>}</span>
+<span id="cb2-43"><a href="#cb2-43" tabindex="-1"></a></span>
+<span id="cb2-44"><a href="#cb2-44" tabindex="-1"></a>tree_consensus <span class="ot">&lt;-</span> <span class="fu">fix_ultrametric</span>(tree_consensus)</span>
+<span id="cb2-45"><a href="#cb2-45" tabindex="-1"></a>ntips <span class="ot">&lt;-</span> <span class="fu">length</span>(tree_consensus<span class="sc">$</span>tip.label)</span></code></pre></div>
+<hr />
+</div>
+<div id="interactive-diagnostics-parameter-tuning-интерактивная-диагностика-и-настройка" class="section level2">
+<h2>3. Interactive Diagnostics &amp; Parameter Tuning / Интерактивная
+диагностика и настройка</h2>
+<p><strong>EN:</strong> The core diagnostic loop. It runs
+bgmyc.singlephy, evaluates acceptance rates and logposterior
+stationarity, plots trace graphs, and prompts you to adjust MCMC
+parameters before scaling to multiple trees.<br />
+<strong>RU:</strong> Основной диагностический цикл. Запускает
+bgmyc.singlephy, оценивает acceptance rates и стационарность логарифма
+правдоподобия, строит графики и предлагает настроить параметры MCMC
+перед многодеревным анализом.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>params <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  <span class="at">mcmc =</span> <span class="dv">10000</span>, <span class="at">burnin =</span> <span class="dv">1000</span>, <span class="at">thinning =</span> <span class="dv">10</span>,</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="at">py1 =</span> <span class="dv">0</span>, <span class="at">py2 =</span> <span class="fl">1.5</span>, <span class="at">pc1 =</span> <span class="dv">0</span>, <span class="at">pc2 =</span> <span class="dv">2</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  <span class="at">t1 =</span> <span class="dv">2</span>, <span class="at">t2 =</span> <span class="fu">min</span>(<span class="dv">35</span>, ntips <span class="sc">-</span> <span class="dv">1</span>),</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>  <span class="at">scale =</span> <span class="fu">c</span>(<span class="dv">20</span>, <span class="dv">10</span>, <span class="dv">5</span>), <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="fu">floor</span>(ntips<span class="sc">/</span><span class="dv">3</span>))</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>)</span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co"># EN: Diagnostic tuning loop / Цикл диагностики и настройки</span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="cf">repeat</span> {</span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a>  res_single <span class="ot">&lt;-</span> <span class="fu">bgmyc.singlephy</span>(</span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a>    <span class="at">phylo =</span> tree_consensus, <span class="at">mcmc =</span> params<span class="sc">$</span>mcmc, <span class="at">burnin =</span> params<span class="sc">$</span>burnin, </span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a>    <span class="at">thinning =</span> params<span class="sc">$</span>thinning, <span class="at">py1 =</span> params<span class="sc">$</span>py1, <span class="at">py2 =</span> params<span class="sc">$</span>py2, </span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a>    <span class="at">pc1 =</span> params<span class="sc">$</span>pc1, <span class="at">pc2 =</span> params<span class="sc">$</span>pc2, <span class="at">t1 =</span> params<span class="sc">$</span>t1, <span class="at">t2 =</span> params<span class="sc">$</span>t2, </span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a>    <span class="at">scale =</span> params<span class="sc">$</span>scale, <span class="at">start =</span> params<span class="sc">$</span>start</span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a>  )</span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a>  </span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a>  <span class="co"># EN: Convergence checks / Проверка сходимости</span></span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a>  ar <span class="ot">&lt;-</span> res_single<span class="sc">$</span>accept</span>
+<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">&quot;Acceptance rates: py=%.3f | pc=%.3f | th=%.3f</span><span class="sc">\n</span><span class="st">&quot;</span>, ar[<span class="dv">1</span>], ar[<span class="dv">2</span>], ar[<span class="dv">3</span>]))</span>
+<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">requireNamespace</span>(<span class="st">&quot;mcmcse&quot;</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)) {</span>
+<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a>    ess_vals <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="cf">function</span>(col) <span class="fu">round</span>(mcmcse<span class="sc">::</span><span class="fu">ess</span>(res_single<span class="sc">$</span>par[, col])))</span>
+<span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">&quot;ESS: py=%d | pc=%d | th=%d | logL=%d [Target &gt; 200]</span><span class="sc">\n</span><span class="st">&quot;</span>, </span>
+<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a>                ess_vals[<span class="dv">1</span>], ess_vals[<span class="dv">2</span>], ess_vals[<span class="dv">3</span>], ess_vals[<span class="dv">4</span>]))</span>
+<span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a>  }</span>
+<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a>  </span>
+<span id="cb3-26"><a href="#cb3-26" tabindex="-1"></a>  <span class="fu">plot</span>(res_single)</span>
+<span id="cb3-27"><a href="#cb3-27" tabindex="-1"></a>  </span>
+<span id="cb3-28"><a href="#cb3-28" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">interactive</span>() <span class="sc">||</span> <span class="fu">tolower</span>(<span class="fu">readline</span>(<span class="st">&quot;Accept parameters? / Принять параметры? (y/n): &quot;</span>)) <span class="sc">!=</span> <span class="st">&quot;n&quot;</span>) <span class="cf">break</span></span>
+<span id="cb3-29"><a href="#cb3-29" tabindex="-1"></a>  </span>
+<span id="cb3-30"><a href="#cb3-30" tabindex="-1"></a>  <span class="co"># EN: Update parameters / Обновление параметров</span></span>
+<span id="cb3-31"><a href="#cb3-31" tabindex="-1"></a>  params<span class="sc">$</span>mcmc <span class="ot">&lt;-</span> <span class="fu">input_scalar</span>(<span class="st">&quot;mcmc&quot;</span>, params<span class="sc">$</span>mcmc)</span>
+<span id="cb3-32"><a href="#cb3-32" tabindex="-1"></a>  params<span class="sc">$</span>burnin <span class="ot">&lt;-</span> <span class="fu">input_scalar</span>(<span class="st">&quot;burnin&quot;</span>, params<span class="sc">$</span>burnin)</span>
+<span id="cb3-33"><a href="#cb3-33" tabindex="-1"></a>  params<span class="sc">$</span>thinning <span class="ot">&lt;-</span> <span class="fu">input_scalar</span>(<span class="st">&quot;thinning&quot;</span>, params<span class="sc">$</span>thinning)</span>
+<span id="cb3-34"><a href="#cb3-34" tabindex="-1"></a>  params<span class="sc">$</span>scale <span class="ot">&lt;-</span> <span class="fu">input_vector</span>(<span class="st">&quot;scale&quot;</span>, params<span class="sc">$</span>scale)</span>
+<span id="cb3-35"><a href="#cb3-35" tabindex="-1"></a>  params<span class="sc">$</span>start <span class="ot">&lt;-</span> <span class="fu">input_vector</span>(<span class="st">&quot;start&quot;</span>, params<span class="sc">$</span>start)</span>
+<span id="cb3-36"><a href="#cb3-36" tabindex="-1"></a>}</span></code></pre></div>
+<hr />
+</div>
+<div id="multi-tree-analysis-многодеревный-анализ" class="section level2">
+<h2>4. Multi-Tree Analysis / Многодеревный анализ</h2>
+<p><strong>EN:</strong> Once diagnostics are stable, bgmyc.multiphylo
+runs on the sampled trees.<br />
+<strong>RU:</strong> После стабилизации диагностики bgmyc.multiphylo
+запускается на выбранных деревьях.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="cf">if</span> (analysis_mode <span class="sc">==</span> <span class="dv">2</span>) {</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  <span class="co"># EN: Parallel execution / Параллельное выполнение</span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>  n_workers <span class="ot">&lt;-</span> <span class="fu">min</span>(parallel<span class="sc">::</span><span class="fu">detectCores</span>(<span class="at">logical =</span> <span class="cn">FALSE</span>) <span class="sc">-</span> <span class="dv">1</span>, <span class="fu">length</span>(trees_sample))</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>  <span class="fu">plan</span>(multisession, <span class="at">workers =</span> <span class="fu">max</span>(<span class="dv">1</span>, n_workers))</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>  </span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>  final_res <span class="ot">&lt;-</span> <span class="fu">future_lapply</span>(<span class="fu">seq_along</span>(trees_sample), <span class="cf">function</span>(i) {</span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>    <span class="fu">bgmyc.singlephy</span>(</span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>      <span class="at">phylo =</span> trees_sample[[i]], <span class="at">mcmc =</span> params<span class="sc">$</span>mcmc, <span class="at">burnin =</span> params<span class="sc">$</span>burnin, </span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a>      <span class="at">thinning =</span> params<span class="sc">$</span>thinning, <span class="at">py1 =</span> params<span class="sc">$</span>py1, <span class="at">py2 =</span> params<span class="sc">$</span>py2, </span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>      <span class="at">pc1 =</span> params<span class="sc">$</span>pc1, <span class="at">pc2 =</span> params<span class="sc">$</span>pc2, <span class="at">t1 =</span> params<span class="sc">$</span>t1, <span class="at">t2 =</span> params<span class="sc">$</span>t2, </span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>      <span class="at">scale =</span> params<span class="sc">$</span>scale, <span class="at">start =</span> params<span class="sc">$</span>start</span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a>    )</span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a>  }, <span class="at">future.seed =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a>  <span class="fu">class</span>(final_res) <span class="ot">&lt;-</span> <span class="st">&quot;multibgmyc&quot;</span></span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a>  </span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a>  <span class="co"># EN: Gelman-Rubin R-hat / Статистика Гелмана-Рубина</span></span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">requireNamespace</span>(<span class="st">&quot;mcmcse&quot;</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>) <span class="sc">&amp;&amp;</span> <span class="fu">length</span>(final_res) <span class="sc">&gt;</span> <span class="dv">1</span>) {</span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a>    chains_list <span class="ot">&lt;-</span> <span class="fu">lapply</span>(final_res, <span class="cf">function</span>(res) res<span class="sc">$</span>par[, <span class="dv">3</span>])</span>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a>    <span class="fu">names</span>(chains_list) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;Tree_&quot;</span>, <span class="fu">seq_along</span>(final_res))</span>
+<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a>    rhat <span class="ot">&lt;-</span> <span class="fu">round</span>(mcmcse<span class="sc">::</span><span class="fu">gelman</span>(chains_list)<span class="sc">$</span>Rhat, <span class="dv">3</span>)</span>
+<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">&quot;Gelman-Rubin R-hat: %.3f [Target &lt; 1.05]</span><span class="sc">\n</span><span class="st">&quot;</span>, rhat))</span>
+<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a>  }</span>
+<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a>  final_res <span class="ot">&lt;-</span> <span class="fu">list</span>(res_single)</span>
+<span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a>  <span class="fu">class</span>(final_res) <span class="ot">&lt;-</span> <span class="st">&quot;multibgmyc&quot;</span></span>
+<span id="cb4-26"><a href="#cb4-26" tabindex="-1"></a>}</span></code></pre></div>
+<hr />
+</div>
+<div id="custom-interactive-visualization-кастомная-визуализация-plotly" class="section level2">
+<h2>5. Custom Interactive Visualization / Кастомная визуализация
+(Plotly)</h2>
+<p><strong>EN:</strong> Custom interactive visualization.<br />
+<strong>RU:</strong> Визуализация результатов.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>probmat <span class="ot">&lt;-</span> <span class="fu">spec.probmat</span>(final_res)</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="co"># EN: Synchronize tip order between tree and matrix / Синхронизация порядка таксонов</span></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>p_tree <span class="ot">&lt;-</span> <span class="fu">suppressWarnings</span>(<span class="fu">ggtree</span>(tree_beast, <span class="at">layout =</span> <span class="st">&quot;rectangular&quot;</span>))</span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>tips_data <span class="ot">&lt;-</span> p_tree<span class="sc">$</span>data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(isTip) <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(y)</span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>tip_order <span class="ot">&lt;-</span> tips_data<span class="sc">$</span>label</span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>probmat <span class="ot">&lt;-</span> probmat[tip_order, tip_order]</span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="co"># EN: Extract posterior probabilities for branches / Извлечение posterior для ветвей</span></span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a>post_col <span class="ot">&lt;-</span> <span class="fu">intersect</span>(<span class="fu">c</span>(<span class="st">&quot;posterior&quot;</span>, <span class="st">&quot;prob&quot;</span>, <span class="st">&quot;Posterior&quot;</span>), <span class="fu">colnames</span>(p_tree<span class="sc">$</span>data))[<span class="dv">1</span>]</span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a>node_posterior <span class="ot">&lt;-</span> p_tree<span class="sc">$</span>data[[post_col]]</span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="fu">names</span>(node_posterior) <span class="ot">&lt;-</span> p_tree<span class="sc">$</span>data<span class="sc">$</span>node</span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="co"># EN: Custom color gradient function / Функция градиента цвета</span></span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a>get_pp_color <span class="ot">&lt;-</span> <span class="cf">function</span>(pp) {</span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">is.na</span>(pp)) <span class="fu">return</span>(<span class="st">&quot;#CCCCCC&quot;</span>)</span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a>  pp <span class="ot">&lt;-</span> <span class="fu">max</span>(<span class="dv">0</span>, <span class="fu">min</span>(<span class="dv">1</span>, pp))</span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a>  colors <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">1.0</span>, <span class="fl">0.0</span>, <span class="fl">0.0</span>), <span class="fu">c</span>(<span class="fl">0.25</span>, <span class="fl">1.0</span>, <span class="fl">0.5</span>, <span class="fl">0.0</span>), </span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a>                 <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">1.0</span>, <span class="fl">1.0</span>, <span class="fl">0.0</span>), <span class="fu">c</span>(<span class="fl">0.75</span>, <span class="fl">0.5</span>, <span class="fl">1.0</span>, <span class="fl">0.0</span>), <span class="fu">c</span>(<span class="fl">1.0</span>, <span class="fl">0.0</span>, <span class="fl">0.7</span>, <span class="fl">0.0</span>))</span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>(<span class="fu">length</span>(colors)<span class="sc">-</span><span class="dv">1</span>)) {</span>
+<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a>    <span class="cf">if</span>(pp <span class="sc">&gt;=</span> colors[[i]][<span class="dv">1</span>] <span class="sc">&amp;&amp;</span> pp <span class="sc">&lt;=</span> colors[[i<span class="sc">+</span><span class="dv">1</span>]][<span class="dv">1</span>]) {</span>
+<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a>      t <span class="ot">&lt;-</span> (pp <span class="sc">-</span> colors[[i]][<span class="dv">1</span>]) <span class="sc">/</span> (colors[[i<span class="sc">+</span><span class="dv">1</span>]][<span class="dv">1</span>] <span class="sc">-</span> colors[[i]][<span class="dv">1</span>])</span>
+<span id="cb5-23"><a href="#cb5-23" tabindex="-1"></a>      r <span class="ot">&lt;-</span> colors[[i]][<span class="dv">2</span>] <span class="sc">+</span> t <span class="sc">*</span> (colors[[i<span class="sc">+</span><span class="dv">1</span>]][<span class="dv">2</span>] <span class="sc">-</span> colors[[i]][<span class="dv">2</span>])</span>
+<span id="cb5-24"><a href="#cb5-24" tabindex="-1"></a>      g <span class="ot">&lt;-</span> colors[[i]][<span class="dv">3</span>] <span class="sc">+</span> t <span class="sc">*</span> (colors[[i<span class="sc">+</span><span class="dv">1</span>]][<span class="dv">3</span>] <span class="sc">-</span> colors[[i]][<span class="dv">3</span>])</span>
+<span id="cb5-25"><a href="#cb5-25" tabindex="-1"></a>      b <span class="ot">&lt;-</span> colors[[i]][<span class="dv">4</span>] <span class="sc">+</span> t <span class="sc">*</span> (colors[[i<span class="sc">+</span><span class="dv">1</span>]][<span class="dv">4</span>] <span class="sc">-</span> colors[[i]][<span class="dv">4</span>])</span>
+<span id="cb5-26"><a href="#cb5-26" tabindex="-1"></a>      <span class="fu">return</span>(<span class="fu">sprintf</span>(<span class="st">&quot;#%02X%02X%02X&quot;</span>, <span class="fu">round</span>(r<span class="sc">*</span><span class="dv">255</span>), <span class="fu">round</span>(g<span class="sc">*</span><span class="dv">255</span>), <span class="fu">round</span>(b<span class="sc">*</span><span class="dv">255</span>)))</span>
+<span id="cb5-27"><a href="#cb5-27" tabindex="-1"></a>    }</span>
+<span id="cb5-28"><a href="#cb5-28" tabindex="-1"></a>  }</span>
+<span id="cb5-29"><a href="#cb5-29" tabindex="-1"></a>  <span class="fu">return</span>(<span class="st">&quot;#CCCCCC&quot;</span>)</span>
+<span id="cb5-30"><a href="#cb5-30" tabindex="-1"></a>}</span>
+<span id="cb5-31"><a href="#cb5-31" tabindex="-1"></a></span>
+<span id="cb5-32"><a href="#cb5-32" tabindex="-1"></a><span class="co"># EN: Build Plotly Tree / Построение дерева в Plotly</span></span>
+<span id="cb5-33"><a href="#cb5-33" tabindex="-1"></a>edges <span class="ot">&lt;-</span> p_tree<span class="sc">$</span>data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(parent))</span>
+<span id="cb5-34"><a href="#cb5-34" tabindex="-1"></a>fig_tree <span class="ot">&lt;-</span> <span class="fu">plot_ly</span>()</span>
+<span id="cb5-35"><a href="#cb5-35" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(edges)) {</span>
+<span id="cb5-36"><a href="#cb5-36" tabindex="-1"></a>  child <span class="ot">&lt;-</span> edges[i, ]</span>
+<span id="cb5-37"><a href="#cb5-37" tabindex="-1"></a>  parent <span class="ot">&lt;-</span> p_tree<span class="sc">$</span>data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(node <span class="sc">==</span> child<span class="sc">$</span>parent)</span>
+<span id="cb5-38"><a href="#cb5-38" tabindex="-1"></a>  branch_color <span class="ot">&lt;-</span> <span class="fu">get_pp_color</span>(node_posterior[<span class="fu">as.character</span>(child<span class="sc">$</span>node)])</span>
+<span id="cb5-39"><a href="#cb5-39" tabindex="-1"></a>  fig_tree <span class="ot">&lt;-</span> fig_tree <span class="sc">%&gt;%</span> <span class="fu">add_segments</span>(</span>
+<span id="cb5-40"><a href="#cb5-40" tabindex="-1"></a>    <span class="at">x =</span> parent<span class="sc">$</span>x, <span class="at">xend =</span> child<span class="sc">$</span>x, <span class="at">y =</span> child<span class="sc">$</span>y, <span class="at">yend =</span> child<span class="sc">$</span>y,</span>
+<span id="cb5-41"><a href="#cb5-41" tabindex="-1"></a>    <span class="at">line =</span> <span class="fu">list</span>(<span class="at">color =</span> branch_color, <span class="at">width =</span> <span class="dv">5</span>), <span class="at">showlegend =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb5-42"><a href="#cb5-42" tabindex="-1"></a>  fig_tree <span class="ot">&lt;-</span> fig_tree <span class="sc">%&gt;%</span> <span class="fu">add_segments</span>(</span>
+<span id="cb5-43"><a href="#cb5-43" tabindex="-1"></a>    <span class="at">x =</span> parent<span class="sc">$</span>x, <span class="at">xend =</span> parent<span class="sc">$</span>x, <span class="at">y =</span> parent<span class="sc">$</span>y, <span class="at">yend =</span> child<span class="sc">$</span>y,</span>
+<span id="cb5-44"><a href="#cb5-44" tabindex="-1"></a>    <span class="at">line =</span> <span class="fu">list</span>(<span class="at">color =</span> branch_color, <span class="at">width =</span> <span class="dv">5</span>), <span class="at">showlegend =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb5-45"><a href="#cb5-45" tabindex="-1"></a>}</span>
+<span id="cb5-46"><a href="#cb5-46" tabindex="-1"></a></span>
+<span id="cb5-47"><a href="#cb5-47" tabindex="-1"></a><span class="co"># EN: Build Plotly Heatmap / Построение тепловой карты</span></span>
+<span id="cb5-48"><a href="#cb5-48" tabindex="-1"></a>fig_heat <span class="ot">&lt;-</span> <span class="fu">plot_ly</span>(</span>
+<span id="cb5-49"><a href="#cb5-49" tabindex="-1"></a>  <span class="at">z =</span> probmat, <span class="at">x =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(probmat), <span class="at">y =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(probmat), <span class="at">type =</span> <span class="st">&quot;heatmap&quot;</span>,</span>
+<span id="cb5-50"><a href="#cb5-50" tabindex="-1"></a>  <span class="at">colorscale =</span> <span class="fu">list</span>(<span class="fu">list</span>(<span class="fl">0.0</span>, <span class="st">&quot;#F7FCF5&quot;</span>), <span class="fu">list</span>(<span class="fl">0.5</span>, <span class="st">&quot;#41AB5D&quot;</span>), <span class="fu">list</span>(<span class="fl">1.0</span>, <span class="st">&quot;#00441B&quot;</span>)),</span>
+<span id="cb5-51"><a href="#cb5-51" tabindex="-1"></a>  <span class="at">zmin =</span> <span class="dv">0</span>, <span class="at">zmax =</span> <span class="dv">1</span>, <span class="at">showscale =</span> <span class="cn">TRUE</span></span>
+<span id="cb5-52"><a href="#cb5-52" tabindex="-1"></a>)</span>
+<span id="cb5-53"><a href="#cb5-53" tabindex="-1"></a></span>
+<span id="cb5-54"><a href="#cb5-54" tabindex="-1"></a><span class="co"># EN: Combine 1:1 / Объединение 1:1</span></span>
+<span id="cb5-55"><a href="#cb5-55" tabindex="-1"></a>fig_combined <span class="ot">&lt;-</span> <span class="fu">subplot</span>(fig_tree, fig_heat, <span class="at">nrows =</span> <span class="dv">1</span>, <span class="at">widths =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.5</span>), <span class="at">shareY =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb5-56"><a href="#cb5-56" tabindex="-1"></a>  <span class="fu">layout</span>(<span class="at">yaxis =</span> <span class="fu">list</span>(<span class="at">autorange =</span> <span class="st">&quot;reversed&quot;</span>, <span class="at">showticklabels =</span> <span class="cn">FALSE</span>),</span>
+<span id="cb5-57"><a href="#cb5-57" tabindex="-1"></a>         <span class="at">xaxis =</span> <span class="fu">list</span>(<span class="at">showticklabels =</span> <span class="cn">FALSE</span>),</span>
+<span id="cb5-58"><a href="#cb5-58" tabindex="-1"></a>         <span class="at">xaxis2 =</span> <span class="fu">list</span>(<span class="at">showticklabels =</span> <span class="cn">FALSE</span>),</span>
+<span id="cb5-59"><a href="#cb5-59" tabindex="-1"></a>         <span class="at">yaxis2 =</span> <span class="fu">list</span>(<span class="at">autorange =</span> <span class="st">&quot;reversed&quot;</span>, <span class="at">showticklabels =</span> <span class="cn">FALSE</span>))</span>
+<span id="cb5-60"><a href="#cb5-60" tabindex="-1"></a></span>
+<span id="cb5-61"><a href="#cb5-61" tabindex="-1"></a>htmlwidgets<span class="sc">::</span><span class="fu">saveWidget</span>(fig_combined, <span class="st">&quot;bGMYC_interactive_heatmap.html&quot;</span>, <span class="at">selfcontained =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<hr />
+</div>
+<div id="delimitation-export-делимитация-и-экспорт" class="section level2">
+<h2>6. Delimitation &amp; Export / Делимитация и экспорт</h2>
+<p><strong>EN:</strong> Delimitation.<br />
+<strong>RU:</strong> Делимитация.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co"># EN: Export clusters at different thresholds / Экспорт кластеров на разных порогах</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="cf">for</span> (p <span class="cf">in</span> <span class="fu">c</span>(<span class="fl">0.05</span>, <span class="fl">0.01</span>)) {</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  out <span class="ot">&lt;-</span> <span class="fu">bgmyc.point</span>(probmat, <span class="at">ppcutoff =</span> p)</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>  df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>    <span class="at">Sequence =</span> <span class="fu">unlist</span>(out),</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>    <span class="at">MOTU_bGMYC =</span> <span class="fu">rep</span>(<span class="fu">seq_along</span>(out), <span class="fu">lengths</span>(out)),</span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>    <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span></span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>  )</span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>  <span class="fu">write.table</span>(df, <span class="at">file =</span> <span class="fu">sprintf</span>(<span class="st">&quot;Delimitation_bGMYC_%.2f.csv&quot;</span>, p),</span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>              <span class="at">row.names =</span> <span class="cn">FALSE</span>, <span class="at">sep =</span> <span class="st">&quot;;&quot;</span>, <span class="at">dec =</span> <span class="st">&quot;.&quot;</span>, <span class="at">quote =</span> <span class="cn">FALSE</span>, <span class="at">fileEncoding =</span> <span class="st">&quot;UTF-8&quot;</span>)</span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>}</span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a><span class="co"># EN: Export full probability matrix / Экспорт полной матрицы вероятностей</span></span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a>spec_out <span class="ot">&lt;-</span> <span class="fu">bgmyc.spec</span>(final_res)</span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a><span class="fu">write.csv</span>(spec_out<span class="sc">$</span>specprobs, <span class="st">&quot;bGMYC_full_probs.csv&quot;</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<hr />
+</div>
+<div id="performance-export-производительность-и-экспорт" class="section level2">
+<h2>⚡ Performance &amp; Export / Производительность и экспорт</h2>
+<p><strong>EN:</strong> bgmyc.multiphylo() automatically parallelizes
+across physical CPU cores. To limit cores (e.g., to 6), run before
+analysis: options(mc.cores = 6).<br />
+<strong>RU:</strong> bgmyc.multiphylo() автоматически использует все
+физические ядра. Чтобы ограничить число ядер (например, до 6), выполните
+перед запуском: options(mc.cores = 6).<br />
+—</p>
+</div>
+<div id="parameter-reference-guide-справочник-по-параметрам" class="section level2">
+<h2>📊 Parameter Reference Guide / Справочник по параметрам</h2>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Parameter / Параметр</th>
+<th align="left">Role / Роль</th>
+<th align="left">Recommended Range</th>
+<th align="left">Biological/Statistical Notes / Примечания</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>mcmc</code></td>
+<td align="left">Chain length / Длина цепи</td>
+<td align="left"><code>10k</code> (test), <code>50k+</code> (final)</td>
+<td align="left">Longer chains improve posterior resolution. / Длинные
+цепи улучшают апостериорную оценку.</td>
+</tr>
+<tr class="even">
+<td align="left"><code>burnin</code></td>
+<td align="left">Warm-up / Разогрев</td>
+<td align="left"><code>20–30%</code> of <code>mcmc</code></td>
+<td align="left">Discards non-stationary start. Increase if logposterior
+drifts. / Отбрасывает неустановившуюся фазу.</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>thinning</code></td>
+<td align="left">Sampling interval / Интервал выборки</td>
+<td align="left"><code>10–50</code></td>
+<td align="left">Reduces autocorrelation &amp; RAM. Higher for long
+chains. / Снижает автокорреляцию и нагрузку на память.</td>
+</tr>
+<tr class="even">
+<td align="left"><code>py1</code>, <code>py2</code></td>
+<td align="left">Yule rate prior / Априор видообразования</td>
+<td align="left"><code>0</code>, <code>0.5–1.5</code></td>
+<td align="left">Model: <code>λ ∝ n^py</code>. <code>py &gt; 1.5</code>
+blurs Yule/Coalescent boundary. / &gt;1.5 размывает границу модели.</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>pc1</code>, <code>pc2</code></td>
+<td align="left">Coalescent prior / Априор коалесценции</td>
+<td align="left"><code>0</code>, <code>1.0–2.0</code></td>
+<td align="left">Models <code>Ne</code> change. <code>pc &lt; 1</code> →
+decline, <code>pc &gt; 1</code> → growth. / Моделирует динамику
+эффективного размера популяции.</td>
+</tr>
+<tr class="even">
+<td align="left"><code>t1</code>, <code>t2</code></td>
+<td align="left">Threshold prior (species count) / Априор числа
+видов</td>
+<td align="left"><code>2</code>, <code>min(35, ntips-5)</code></td>
+<td align="left">Must be <code>&lt; ntips</code>. Auto-capped to prevent
+crashes. / Строго <code>&lt; числа таксонов</code>.</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>scale</code></td>
+<td align="left">Proposal step widths / Ширина предложений MCMC</td>
+<td align="left"><code>c(20–30, 10–15, 3–7)</code></td>
+<td align="left">Higher = more conservative. Tune via acceptance rates.
+/ Выше = консервативнее. Настраивается по acceptance rates.</td>
+</tr>
+<tr class="even">
+<td align="left"><code>ppcutoff</code></td>
+<td align="left">Lumping threshold / Порог объединения</td>
+<td align="left"><code>0.05</code> (variable), <code>0.95</code>
+(strict)</td>
+<td align="left">Low = captures high intraspecific variation/ILS. /
+Низкий = учитывает высокую внутривидовую изменчивость.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+</div>
+<div id="convergence-diagnostics-guide-руководство-по-диагностике-сходимости" class="section level2">
+<h2>🔍 Convergence Diagnostics Guide / Руководство по диагностике
+сходимости</h2>
+<p><strong>EN:</strong> After the diagnostic run, evaluate two
+metrics:<br />
+1. <strong>Acceptance Rates</strong>: <code>0.20–0.40</code> is optimal.
+<code>&lt;0.15</code> → decrease <code>scale</code>.
+<code>&gt;0.50</code> → increase <code>scale</code>.<br />
+2. <strong>Trace Plots (“Fuzzy Caterpillars”)</strong>: After burnin,
+parameters should oscillate horizontally around a stable mean.
+Upward/downward trends → increase burnin or mcmc. Sticky steps → scale
+too high. Smooth/lazy curves → scale too low. Hitting bounds → widen
+priors.</p>
+<p><strong>RU:</strong> После диагностического запуска проверьте два
+показателя:<br />
+1. <strong>Acceptance Rates</strong>: Оптимум <code>0.20–0.40</code>.
+<code>&lt;0.15</code> → уменьшите <code>scale</code>.
+<code>&gt;0.50</code> → увеличьте <code>scale</code>.<br />
+2. <strong>Графики (“пушистые гусеницы”)</strong>: После burnin
+параметры должны колебаться горизонтально вокруг стабильного среднего.
+Тренды вверх/вниз → увеличьте <code>burnin</code> или <code>mcmc</code>.
+Ступеньки → <code>scale</code> слишком высок. Гладкие кривые →
+<code>scale</code> слишком низок. Прилипание к границам → расширьте
+априоры.</p>
+<hr />
+</div>
+<div id="notes-for-cran-local-use-примечания-для-cran-и-локального-запуска" class="section level2">
+<h2>📎 Notes for CRAN &amp; Local Use / Примечания для CRAN и локального
+запуска</h2>
+<p><strong>EN:</strong> - <code>eval = FALSE</code> in code chunks
+prevents CRAN from timing out during automated checks.<br />
+- To run interactively: change <code>eval = FALSE</code> to
+<code>eval = TRUE</code> in the first chunk, or simply copy-paste chunks
+into RStudio console and execute sequentially.<br />
+- Always run diagnostics on 1 tree before scaling to
+<code>multiPhylo</code>.</p>
+<p><strong>RU:</strong> - <code>eval = FALSE</code> предотвращает
+таймауты при автоматической проверке CRAN.<br />
+- Для локального запуска: измените <code>eval = FALSE</code> на
+<code>eval = TRUE</code> в первом блоке, или копируйте блоки в консоль
+RStudio и запускайте последовательно.<br />
+- Всегда запускайте диагностику на 1 дереве перед переходом к
+<code>multiPhylo</code>.</p>
+<hr />
+<p><strong>References / Ссылки:</strong> Pons et al. 2006 <em>Syst.
+Biol.</em> 55:595; Reid &amp; Carstens 2012 <em>Mol. Ecol. Res.</em>
+12:446.</p>
+<p><code>vignette(&quot;bGMYC4-interactive&quot;, package = &quot;bGMYC4&quot;)</code></p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
