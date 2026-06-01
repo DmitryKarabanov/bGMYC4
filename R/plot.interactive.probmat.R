@@ -1,12 +1,19 @@
 #' @export
 plot.interactive.probmat <- function(x, tree,
-                                     palette = "green",
-                                     show_tree = TRUE,
-                                     tree_width = 0.3,
-                                     width = 1400,
-                                     height = 1000,
-                                     save_html = NULL,
-                                     ...) {
+    palette = "green",
+    show_tree = TRUE,
+    tree_width = 0.3,
+    width = 1400,
+    height = 1000,
+    save_html = NULL,
+    # === НОВЫЕ ПАРАМЕТРЫ ДЛЯ КАСТОМНОГО РЕЖИМА ===
+    custom_mode = TRUE,            # FALSE = old PNG-режим, TRUE = new vector subplot
+    posterior_col = NULL,          # posterior (NULL = auto: "posterior", "prob", ...)
+    branch_gradient = NULL,        # gradient (NULL = red-green)
+    tip_label_step = NULL,         # labes (NULL = auto: ~1/40)
+    treeio_tree = NULL,            # treedata (optional)
+    ...
+) {
   
   if (!requireNamespace("plotly", quietly = TRUE)) {
     stop("Package 'plotly' is required. Please install: install.packages('plotly')")
