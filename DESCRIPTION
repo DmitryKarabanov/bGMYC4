@@ -17,7 +17,7 @@ Encoding: UTF-8
 LazyData: true
 Imports: ape (>= 5.0), future, future.apply
 Suggests: mcmcse, plotly, base64enc, testthat (>= 3.0.0), knitr, 
-        rmarkdow, htmltools, htmlwidgets, treeio, ggtree, dplyr
+        rmarkdown, htmltools, htmlwidgets, treeio, ggtree, dplyr
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 8.0.0
