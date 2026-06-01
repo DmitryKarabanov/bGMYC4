@@ -26,8 +26,8 @@ if (!file.exists(consensus_path)) stop("❌ Консенсусное дерев�
 if (!file.exists(posterior_path)) stop("❌ Файл с деревьями не найден!")
 
 DELIM_DIR <- dirname(consensus_path)
-html_path <- file.path(OUT_DIR, "bGMYC_interactive_heatmap.html")
-cat(sprintf("💾 Результаты будут сохранены в: %s\n", OUT_DIR))
+html_path <- file.path(DELIM_DIR, "bGMYC_interactive_heatmap.html")
+cat(sprintf("💾 Результаты будут сохранены в: %s\n", DELIM_DIR))
 
 # Используем treeio::read.beast() для извлечения posterior из Nexus-аннотаций
 tree_beast <- read.beast(consensus_path)
