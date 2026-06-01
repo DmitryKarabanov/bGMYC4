@@ -9,7 +9,7 @@
 
 ## 🌍 Overview 
 
-bGMYC4 implements a Bayesian version of the General Mixed Yule-Coalescent model for species delimitation from single-locus data. It uses Markov Chain Monte Carlo (MCMC) simulation to evaluate the posterior distribution of species boundaries, allowing the use of multiple phylogenetic trees to account for phylogenetic uncertainty. The package includes interactive diagnostics, parameter tuning, and visualization tools. Full documentation and interactive vignette available in both English and Russian. 
+bGMYC4 implements a Bayesian version of the General Mixed Yule-Coalescent model for species delimitation from single-locus data. It uses Markov Chain Monte Carlo (MCMC) simulation to evaluate the posterior distribution of species boundaries, allowing the use of multiple phylogenetic trees to account for phylogenetic uncertainty. The package includes interactive diagnostics, parameter tuning, and visualization tools. Full documentation and interactive vignette available in both English and Russian. Full simple interactiv scrip available in inst\scripts
 
 ---
 
