@@ -1,11 +1,6 @@
 \name{plot.interactive.probmat}
 \alias{plot.interactive.probmat}
-\title{
-Interactive plot method for bgmycprobmat objects}
-\description{
-Creates an interactive heatmap of conspecificity probabilities using plotly,
-with a phylogenetic tree aligned on the left side.
-}
+\title{Interactive Probability Matrix Plot for bGMYC Results}
 \usage{
 \method{plot}{interactive.probmat}(
   x,
@@ -16,41 +11,74 @@ with a phylogenetic tree aligned on the left side.
   width = 1400,
   height = 1000,
   save_html = NULL,
+  custom_mode = TRUE,
+  posterior_col = NULL,
+  branch_gradient = NULL,
+  tip_label_step = NULL,
+  treeio_tree = NULL,
   ...
 )
 }
 \arguments{
-\item{x}{A matrix of conspecificity probabilities (output of spec.probmat)}
+  \item{x}{A probability matrix (output from \code{spec.probmat}).}
 
-\item{tree}{A phylogenetic tree (phylo object), must match the matrix dimensions}
+  \item{tree}{A phylogenetic tree of class \code{phylo}.}
 
-\item{palette}{Character; color palette: "green" (default), "viridis", "RdYlBu", "classic"}
+  \item{palette}{Color palette for heatmap: "green", "viridis", "RdYlBu", or "classic". Default: "green".}
 
-\item{show_tree}{Logical; if TRUE, displays phylogenetic tree on the left (default: TRUE)}
+  \item{show_tree}{Logical: whether to display phylogenetic tree alongside matrix. Default: TRUE.}
 
-\item{tree_width}{Numeric; relative width of tree panel (0-1, default: 0.3)}
+  \item{tree_width}{Relative width of tree panel (0.1–0.5) when \code{show_tree = TRUE}. Default: 0.3.}
 
-\item{width}{Numeric; total plot width in pixels (default: 1400)}
+  \item{width}{Plot width in pixels. Default: 1400.}
 
-\item{height}{Numeric; total plot height in pixels (default: 1000)}
+  \item{height}{Plot height in pixels. Default: 1000.}
 
-\item{save_html}{Character or NULL; if provided, saves interactive plot to this HTML file}
+  \item{save_html}{Optional path to save interactive plot as self-contained HTML file.}
 
-\item{...}{Additional arguments passed to ape::plot.phylo for tree styling}
+  \item{custom_mode}{Logical: enable advanced vector-based visualization with posterior-colored branches? 
+  Default: FALSE (backward compatible). TRUE for publication-quality output with interactive tree.}
+
+  \item{posterior_col}{Optional name of column containing posterior probabilities in tree annotations.
+  If NULL, auto-detects from c("posterior", "prob", "Posterior", "PROB").}
+
+  \item{branch_gradient}{Optional list of color gradient control points for branch coloring.
+  Format: list(c(position, R, G, B), ...). Default: red→orange→yellow→lightgreen→green ramp.}
+
+  \item{tip_label_step}{Step for sparse tip labeling (e.g., 40 = label every 40th tip). 
+  If NULL, auto-calculated as max(1, ceiling(n_tips / 40)).}
+
+  \item{treeio_tree}{Optional pre-loaded \code{treedata} object (from \code{treeio::read.beast}).
+  Avoids re-reading file when using custom_mode = TRUE.}
+
+  \item{...}{Additional arguments passed to plotting functions.}
 }
 \value{
-A plotly object (invisibly); also saves to HTML if save_html is specified
+  An invisible \code{plotly} object. If \code{save_html} is specified, also saves to file.
+}
+\description{
+  Creates an interactive HTML visualization of conspecificity probability matrix
+  from bGMYC analysis, with optional posterior-colored phylogenetic tree.
+  Supports two modes: standard (PNG-based tree overlay) and custom (vector-based subplot with interactive branches).
 }
 \examples{
 \dontrun{
-data(east10)
-res <- bgmyc.singlephy(east10[[1]], mcmc = 1000, burnin = 200, thinning = 10)
-prob_mat <- spec.probmat(res)
-plot.interactive.probmat(prob_mat, east10[[1]])
-plot.interactive.probmat(prob_mat, east10[[1]], save_html = "heatmap.html")
+  # Standard mode (backward compatible)
+  plot.interactive.probmat(probmat, tree, save_html = "output.html")
+  
+  # Custom mode with posterior-colored tree
+  library(treeio)
+  tree_beast <- read.beast("consensus.nexus")
+  plot.interactive.probmat(probmat, tree, 
+                           custom_mode = TRUE, 
+                           treeio_tree = tree_beast,
+                           palette = "viridis",
+                           save_html = "output_custom.html")
 }
 }
+\keyword{hplot}
+\keyword{aplot}
 \author{
-Qwen 3.6
-Dmitry Karabanov <dk@ibiw.ru>
+  Qwen 3.6
+  Dmitry Karabanov <dk@ibiw.ru>
 }
