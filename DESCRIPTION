@@ -16,8 +16,8 @@ License: file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports: ape (>= 5.0), future, future.apply
-Suggests: testthat (>= 3.0.0), knitr, rmarkdow, plotly, htmltools,
-        base64enc, htmlwidgets, ggtree
+Suggests: mcmcse, plotly, base64enc, testthat (>= 3.0.0), knitr, 
+        rmarkdow, htmltools, htmlwidgets, treeio, ggtree, dplyr
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 8.0.0
@@ -27,4 +27,4 @@ Author: Noah Reid [aut] (Original author of bGMYC),
   Dmitry Karabanov [aut, cre] (Maintainer of bGMYC4),
   Qwen 3.6 [ctb] (Code modernization and R 4.x compatibility)
 Maintainer: Dmitry Karabanov <dk@ibiw.ru>
-Depends: R (>= 4.0)
+Depends: R (>= 3.5.0)
