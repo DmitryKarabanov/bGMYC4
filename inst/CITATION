@@ -1,0 +1,8 @@
+citEntry(
+  entry = "Manual",
+  title = "bGMYC4: Bayesian GMYC with Interactive Visualization",
+  author = person("Dmitry", "Karabanov", role = c("aut", "cre"), 
+                  email = "dk@ibiw.ru"),
+  year = "2026",
+  url = "https://github.com/DmitryKarabanov/bGMYC4"
+)
