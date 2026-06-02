@@ -354,6 +354,8 @@ if (!exists("tree_beast") || !inherits(tree_beast, "treedata")) {
 }
 
 # Получаем порядок кончиков из дерева
+if(!is.null(tree$edge.length)) tree$edge.length[tree$edge.length < 0] <- 0
+options(ignore.negative.edge = TRUE)
 p_tree_raw <- suppressWarnings(ggtree(tree, layout = "rectangular"))
 tree_data_raw <- p_tree_raw$data
 tips_data_raw <- tree_data_raw %>% dplyr::filter(isTip) %>% dplyr::arrange(y)
