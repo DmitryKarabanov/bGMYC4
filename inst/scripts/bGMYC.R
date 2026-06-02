@@ -206,7 +206,7 @@ repeat {
   cat("👀 Закройте окно графиков для анализа сходимости...\n")
   Sys.sleep(1); flush.console()
   
-# 🟢 ДИНАМИЧЕСКАЯ АНАЛИТИКА СХОДИМОСТИ 
+  # 🟢 ДИНАМИЧЕСКАЯ АНАЛИТИКА СХОДИМОСТИ 
   ar <- res_single$accept
   cat(sprintf("\n📊 Acceptance rates: py=%.3f | pc=%.3f | th=%.3f\n", ar[1], ar[2], ar[3]))
   
@@ -222,19 +222,6 @@ repeat {
   recs <- character(0)
   param_names <- c("py", "pc", "th")
   
-  for (i in 1:3) {
-    if (ar[i] > 0.55) {
-      new_val <- round(params$scale[i] * 1.5)
-      if (new_val == params$scale[i]) new_val <- params$scale[i] + (if(i < 3) 5 else 2)
-      recs <- c(recs, sprintf("• %s: слишком высокая (%.2f) → увеличьте scale[%d] с %g до ~%d",
-                              param_names[i], ar[i], i, params$scale[i], new_val))
-    } else if (ar[i] < 0.15) {
-      new_val <- max(if(i < 3) 2 else 1, round(params$scale[i] * 0.5))
-      recs <- c(recs, sprintf("• %s: слишком низкая (%.2f) → уменьшите scale[%d] с %g до ~%d",
-                              param_names[i], ar[i], i, params$scale[i], new_val))
-    }
-  }
-  
   if (!is.null(ess_vals) && any(ess_vals < 200)) {
     recs <- c(recs, "• ↑ mcmc или ↓ thinning (ESS < 200: цепь требует больше независимых шагов)")
   }
@@ -247,7 +234,7 @@ repeat {
     cat("✅ Сходимость цепи стабильна. Параметры оптимальны.\n")
   }
   
-
+  
   next_prompt <- if (analysis_mode == 1) {
     "⏭️  Перейти к финальному выводу (y) или изменить параметры (n)? [y/n]: "
   } else {
@@ -279,7 +266,6 @@ repeat {
   
   cat(sprintf("🔒 Параметры обновлены: t ∈ [%d, %d] | start[3] = %d\n\n", params$t1, params$t2, params$start[3]))
 }
-
 # 8. ПОДГОТОВКА ФИНАЛЬНЫХ РЕЗУЛЬТАТОВ
 if (analysis_mode == 1) {
   cat("\n🌲 Анализ на одном дереве завершён. Формирую выводы...\n")
@@ -308,6 +294,7 @@ if (analysis_mode == 1) {
   class(final_res) <- "multibgmyc"
   cat("✅ Все деревья успешно обработаны.\n")
   
+  # 📐 Gelman-Rubin (R̂) диагностика по цепям разных деревьев
   if (requireNamespace("mcmcse", quietly = TRUE) && length(final_res) > 1) {
     cat("\n📐 Расчёт Gelman-Rubin (R̂) across tree chains...\n")
     
@@ -317,14 +304,24 @@ if (analysis_mode == 1) {
     gr_result <- tryCatch(mcmcse::gelman(chains_list), error = function(e) NULL)
     
     if (!is.null(gr_result)) {
-      rhat <- round(gr_result$Rhat, 3)
-      cat(sprintf("🔍 Gelman-Rubin R̂ (threshold): %.3f [Оптимум: < 1.05]\n", rhat))
-      
-      if (rhat > 1.05) {
-        cat("⚠️  R̂ > 1.05: цепи показывают расхождение. Увеличьте mcmc/burnin или проверьте топологии деревьев.\n")
+      # Извлекаем R̂ правильно (это поле psrf, и это матрица)
+      if (!is.null(gr_result$psrf)) {
+        # psrf — это матрица, берём первое значение (Point est.)
+        rhat <- round(as.numeric(gr_result$psrf[1, "Point est."]), 3)
+        cat(sprintf("🔍 Gelman-Rubin R̂ (threshold): %.3f [Оптимум: < 1.05]\n", rhat))
+        
+        if (rhat > 1.05) {
+          cat("⚠️  R̂ > 1.05: цепи показывают расхождение. Увеличьте mcmc/burnin или проверьте топологии деревьев.\n")
+        } else {
+          cat("✅ Цепи сошлись стабильно across posterior trees.\n")
+        }
       } else {
-        cat("✅ Цепи сошлись стабильно across posterior trees.\n")
+        cat("⚠️  Не удалось извлечь R̂ из результата gelman()\n")
+        cat("   Структура gr_result:\n")
+        print(names(gr_result))
       }
+    } else {
+      cat("⚠️  Не удалось рассчитать Gelman-Rubin (возможно, слишком мало цепей или они слишком короткие)\n")
     }
   }
 }
