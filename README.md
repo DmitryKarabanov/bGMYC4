@@ -26,7 +26,7 @@ bGMYC4 implements a Bayesian version of the General Mixed Yule-Coalescent model 
 | ⚡ Optimized performance | Parallel `bgmyc.multiphylo()`, pure-R post-processing, vectorized matrices |
 | ✅ Full CRAN compliance | `0 errors, 0 warnings, 0 notes`|
 | ⚡ High-performance prallelization | Stable parallel backend for Windows |
-| 🔍 Detailed guide | Interactive vignette with dynamic convergence diagnostics (need knitr, rmarkdown, pandoc) |
+| 🔍 Detailed guide | Interactive vignette with dynamic convergence diagnostics (need knitr, rmarkdown, pandoc). Full simple interactiv scrip available in `inst\scripts` |
 | 🧹 Pure-R post-processing | No external `sort`/`uniq` dependencies |
 
 ---
