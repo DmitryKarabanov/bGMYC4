@@ -223,7 +223,7 @@ compiler::enableJIT(3)  # +2–3% speedup on all MCMC loops, no code changes
   title = {bGMYC4: Bayesian General Mixed Yule-Coalescent Model for Species Delimitation},
   author = {Karabanov, Dmitry},
   year = {2026},
-  note = {R package version 4.1.0. Developed with assistance from Qwen3.6 AI assistant.},
+  note = {R package version 4. Developed with assistance from Qwen3.6 AI assistant.},
   url = {https://github.com/DmitryKarabanov/bGMYC4},
  }
 ```
