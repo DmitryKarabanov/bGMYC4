@@ -49,7 +49,7 @@ install.packages("path/to/bGMYC4_4.1.0.tar.gz", repos = NULL, type = "source")
 ```
 
 ### 🔹 System requirements
-- **R ≥ 4.5.1** (tested on 4.5.1–4.5.3)
+- **R ≥ 4.0** (tested on 4.5.1–4.5.3)
 - **OS:** Windows 11 x64, macOS, Linux
 - **Dependencies:** `ape`, `future`, `future.apply`, `parallel`, `knitr`, `rmarkdown`
 - **Recommended for Diagnostics:** `mcmcse` (for ESS & Gelman-Rubin $\hat{R}$ convergence checks)
