@@ -1,7 +1,7 @@
 Package: bGMYC4
 Type: Package
 Title: Bayesian GMYC Model for Species Delimitation
-Version: 4.1.0
+Version: 4.1.1
 Authors@R: c(
     person("Noah", "Reid", email = "noah.reid@gmail.com",
            role = "aut", comment = "Original author of bGMYC"),
