@@ -43,7 +43,7 @@ remotes::install_github("DmitryKarabanov/bGMYC4", build_vignettes = TRUE)
 
 ### 🔹 From source archive
 ```r
-install.packages("path/to/bGMYC4_4.1.0.tar.gz", repos = NULL, type = "source")
+install.packages("path/to/bGMYC4.tar.gz", repos = NULL, type = "source")
 # To build vignettes locally:
 # install.packages("path/to/bGMYC4.tar.gz", repos = NULL, type = "source", build_vignettes = TRUE)
 ```
@@ -155,7 +155,7 @@ cat("Delimited clusters:", length(out), "\n")
 
 ## ⚡ Performance & Compatibility 
 
-The optimized `bGMYC4 v4.1.0` is **fully compatible with R ≥ 4.5** and includes:
+The optimized `bGMYC4` is **fully compatible with R ≥ 4.5** and includes:
 
 | Feature / Возможность | Description |
 |----------------------|----------------------|
