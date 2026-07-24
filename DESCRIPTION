@@ -1,30 +1,43 @@
 Package: bGMYC4
 Type: Package
-Title: Bayesian GMYC Model for Species Delimitation (Development
-        Version)
+Title: Bayesian GMYC Model for Species Delimitation
 Version: 4.1.0
 Authors@R: c(
-    person("Noah", "Reid", email = "noah.reid@gmail.com", role = c("aut"), comment = "Original author of bGMYC"),
-    person("Dmitry", "Karabanov", email = "dk@ibiw.ru", role = c("aut", "cre"), comment = "Maintainer of bGMYC4"),
-    person("Qwen", "3.6", email = "qwen@alibabacloud.com", role = c("ctb"), comment = "Code modernization and R 4.x compatibility")
-  )
-Description: Implements a Bayesian version of the general mixed Yule-coalescent
-    model for species delimitation introduced by Pons et al. (2006). It uses
-    Markov Chain Monte Carlo simulation to evaluate the posterior distribution
-    of the model and supports flexible prior specification on model parameters.
-License: file LICENSE
+    person("Noah", "Reid", email = "noah.reid@gmail.com",
+           role = "aut", comment = "Original author of bGMYC"),
+    person("Dmitry", "Karabanov", email = "dk@ibiw.ru",
+           role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0001-6008-7441")),
+    person("Qwen", "3.6", role = "ctb",
+           comment = "Code modernization and R 4.x compatibility")
+    )
+Description: Implements a Bayesian version of the general mixed
+    Yule-coalescent model for species delimitation introduced by
+    Pons et al. (2006). It uses Markov Chain Monte Carlo simulation
+    to evaluate the posterior distribution of the model and supports
+    flexible prior specification on model parameters.
+License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
-Imports: ape (>= 5.0), future, future.apply
-Suggests: mcmcse, plotly, base64enc, testthat (>= 3.0.0), knitr, 
-        rmarkdown, htmltools, htmlwidgets, treeio, ggtree, dplyr
+Depends: R (>= 3.5.0)
+Imports:
+    ape (>= 5.0),
+    future,
+    future.apply
+Suggests:
+    mcmcse,
+    plotly,
+    base64enc,
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown,
+    htmltools,
+    htmlwidgets,
+    treeio,
+    ggtree,
+    dplyr
 VignetteBuilder: knitr
+URL: https://github.com/DmitryKarabanov/bGMYC4
+BugReports: https://github.com/DmitryKarabanov/bGMYC4/issues
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 8.0.0
-NeedsCompilation: no
-Packaged: 2026-05-10 18:21:05 UTC; Professional
-Author: Noah Reid [aut] (Original author of bGMYC),
-  Dmitry Karabanov [aut, cre] (Maintainer of bGMYC4),
-  Qwen 3.6 [ctb] (Code modernization and R 4.x compatibility)
-Maintainer: Dmitry Karabanov <dk@ibiw.ru>
-Depends: R (>= 3.5.0)
