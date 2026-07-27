@@ -1,10 +1,10 @@
-﻿---
-title: "bGMYC4 Interactive Workflow / Интерактивный рабочий процесс bGMYC4"
-author: "Dmitry Karabanov & Qwen3.6-Plus"
+---
+title: "bGMYC4 Interactive Workflow"
+author: "Dmitry Karabanov & Qwen"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{bGMYC4 Interactive Workflow / Интерактивный рабочий процесс bGMYC4}
+  %\VignetteIndexEntry{bGMYC4 Interactive Workflow}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -23,8 +23,8 @@ knitr::opts_chunk$set(
 ```
 
 ## 🌍 Introduction / Введение    
-**EN**: This vignette documents the complete interactive workflow for Bayesian species delimitation using bGMYC4. It guides you through data selection (built-in east10 or custom BEAST2 files), tree preprocessing, interactive MCMC diagnostics with parameter tuning, multi-tree uncertainty pooling, and final species hypothesis extraction. The workflow is designed for RStudio console execution.    
-**RU**: Эта виньетка описывает полный интерактивный рабочий процесс байесовской делимитации видов с помощью bGMYC4. Она проведёт вас через выбор данных (встроенный east10 или собственные файлы BEAST2), предобработку деревьев, интерактивную диагностику MCMC с настройкой параметров, усреднение филогенетической неопределённости и извлечение гипотез о видах. Рабочий процесс оптимизирован для выполнения в консоли RStudio.    
+**EN:** This vignette documents the complete interactive workflow for Bayesian species delimitation using bGMYC4. It guides you through data selection, tree preprocessing (BEAST2 annotations), interactive MCMC diagnostics with parameter auto-tuning, multi-tree uncertainty pooling via parallel computing, and custom interactive visualization.
+**RU:** Эта виньетка описывает полный интерактивный рабочий процесс байесовской делимитации видов с помощью bGMYC4. Она проведёт вас через выбор данных, предобработку деревьев (аннотации BEAST2), интерактивную диагностику MCMC с автонастройкой параметров, усреднение филогенетической неопределённости через параллельные вычисления и кастомную интерактивную визуализацию.    
 ---
 
 ## 1. Setup & Helper Functions / Настройка окружения и вспомогательные функции    
@@ -32,50 +32,46 @@ knitr::opts_chunk$set(
 **RU:** Загрузка библиотек и определение безопасных обработчиков ввода. Рабочий процесс автоматически очищает аннотации BEAST2, проверяет ультраметричность и валидирует границы параметров.    
 
 ```{r setup}
-compiler::enableJIT(3) # JIT acceleration recommendation
+compiler::enableJIT(3) # JIT acceleration / Ускорение JIT
 library(ape)
 library(bGMYC4)
+library(treeio)
+library(ggtree)
+library(dplyr)
+library(plotly)
+library(htmlwidgets)
+library(future)
+library(future.apply)
+library(mcmcse)
 
-# EN: Safe numeric input with bounds checking / Безопасный ввод чисел с проверкой границ    
-safe_num <- function(prompt, default, min_v = NULL, max_v = NULL, hint = "") {
-  if (!interactive()) return(default)
-  inp <- readline(sprintf("%s [%s] %s: ", prompt, default, hint))
-  if (inp == "") return(default)
-  val <- suppressWarnings(as.numeric(inp))
-  if (is.na(val)) {
-    cat("  ⚠️ Invalid/Неверный ввод. Оставляю текущее.\n")
-    return(default)
-  }
-  if (!is.null(min_v) && val < min_v) {
-    cat(sprintf("  ⚠️ < min (%s). Using %s.\n", min_v, min_v))
-    return(min_v)
-  }
-  if (!is.null(max_v) && val > max_v) {
-    cat(sprintf("  ⚠️ > max (%s). Using %s.\n", max_v, max_v))
-    return(max_v)
-  }
-  return(val)
+# EN: Safe numeric scalar input / Безопасный ввод скалярных значений
+input_scalar <- function(label, default_val) {
+  if (!interactive()) return(default_val)
+  val <- readline(sprintf("  %s (default / по умолчанию: %s): ", label, default_val))
+  if (nchar(trimws(val)) == 0) return(default_val)
+  num <- suppressWarnings(as.numeric(val))
+  if (is.na(num)) return(default_val)
+  return(num)
 }
 
-# EN: Read Nexus files while stripping BEAST2 metadata / Чтение Nexus с удалением метаданных BEAST2    
-read_beast_nexus <- function(file_path) {
-  cat(sprintf("📥 Reading / Читаю: %s\n", basename(file_path)))
-  lines <- readLines(file_path, warn = FALSE)
-  lines <- gsub("\\[&[^]]*\\]", "", lines)  # Strip [&...] tags
-  tmp <- tempfile(fileext = ".trees")
-  writeLines(lines, tmp)
-  tr <- read.nexus(tmp)
-  unlink(tmp)
-  return(tr)
+# EN: Safe numeric vector input / Безопасный ввод векторов
+input_vector <- function(label, default_vec) {
+  if (!interactive()) return(default_vec)
+  val <- readline(sprintf("  %s (comma-separated, default / через запятую, по умолчанию: %s): ", 
+                          label, paste(default_vec, collapse = ", ")))
+  if (nchar(trimws(val)) == 0) return(default_vec)
+  nums <- suppressWarnings(as.numeric(unlist(strsplit(val, "[,;\\s]+"))))
+  nums <- nums[!is.na(nums)]
+  if (length(nums) != length(default_vec)) return(default_vec)
+  return(nums)
 }
 
-# EN: Enforce ultrametricity with float rounding / Обеспечение ультраметричности    
+# EN: Enforce ultrametricity / Обеспечение ультраметричности
 fix_ultrametric <- function(tr) {
   if (!is.ultrametric(tr)) {
-    cat("⚠️ Not ultrametric / Не ультраметрично. Округляю длины ветвей / Rounding edges...\n")
     tr$edge.length <- round(tr$edge.length, 8)
+    if (!is.ultrametric(tr)) stop("❌ Tree remains non-ultrametric / Дерево остаётся неультраметричным.")
   }
-  if (!is.ultrametric(tr)) stop("❌ Still not ultrametric / Всё ещё не ультраметрично. Проверьте экспорт BEAST2.")
   return(tr)
 }
 ```
@@ -83,66 +79,55 @@ fix_ultrametric <- function(tr) {
 ---
 
 ## 2. Data Selection & Tree Preprocessing / Выбор данных и предобработка деревьев    
-**EN:** Choose between the simulated `east10` dataset or your own BEAST2 files. The script guides you through rooting, outgroup removal, and ultrametricity verification.  
-**RU:** Выбор между симулированным датасетом `east10` или вашими файлами BEAST2. Скрипт проведёт через укоренение, удаление аутгрупп и проверку ультраметричности.    
+**EN:** Load consensus tree with BEAST2 annotations (for posterior visualization).  
+**RU:** Загрузка консенсусного дерева с аннотациями BEAST2 (для визуализации posterior).    
 
-```{r preprocessing}
-cat("Select data source / Выберите источник данных:\n")
-cat("  1. Built-in 'east10' / Встроенный датасет 'east10'\n")
-cat("  2. Custom BEAST2 files / Собственные файлы\n")
-choice <- safe_num("Enter 1 or 2 / Введите 1 или 2", 1, min_v = 1, max_v = 2)
+```{r data}
+consensus_path <- if (interactive()) readline("📥 Path to consensus tree / Путь к консенсусному дереву (.tree): ") else "dummy.tree"
+posterior_path <- if (interactive()) readline("📥 Path to posterior trees / Путь к набору деревьев (.trees): ") else "dummy.trees"
 
-if (choice == 1) {
-  data(east10)
-  tree_consensus <- east10[[1]]
-  all_trees <- east10
-} else {
-  if (interactive()) {
-    cat("\n📂 Select directory / Выберите директорию:\n")
-    dir_path <- utils::choose.dir(default = getwd(), caption = "Select trees folder")
-    if (dir_path == "") stop("❌ Directory not selected / Директория не выбрана.")
-    setwd(dir_path)
-    tree_consensus <- read_beast_nexus(utils::choose.files(caption = "Select .tree file"))
-    all_trees      <- read_beast_nexus(utils::choose.files(caption = "Select .trees file"))
-  } else {
-    stop("Для собственных файлов укажите пути к .tree и .trees вручную.")
-  }
-}
-
-ntips <- length(tree_consensus$tip.label)
-cat(sprintf("✅ Trees loaded / Загружено деревьев: %d | Tips / Таксонов: %d\n", length(all_trees), ntips))
-
-# EN: Rooting check & outgroup removal / Проверка укоренения и удаление аутгрупп    
-if (interactive()) {
-  cat("\n🔍 Rooting check / Проверка укоренения:\n")
-  if (!all(sapply(all_trees, is.rooted))) {
-    og_str <- readline("Enter outgroup(s) / Введите аутгруппу(ы) (comma-separated): ")
-    outgroups <- trimws(strsplit(og_str, ",")[[1]])
-    all_trees      <- lapply(all_trees, function(t) if (!is.rooted(t)) root(t, outgroups[1], resolve.root = TRUE) else t)
-    tree_consensus <- if (!is.rooted(tree_consensus)) root(tree_consensus, outgroups[1], resolve.root = TRUE) else tree_consensus
-  }
-  
-  cat("\n🔪 Remove taxa from analysis? / Удалить таксоны из анализа? (y/n): ")
-  if (tolower(readline("")) %in% c("y", "yes", "да", "")) {
-    og_str <- readline("Enter taxa to drop / Введите таксоны для удаления (comma-separated): ")
-    drop_list <- trimws(strsplit(og_str, ",")[[1]])
-    tree_consensus <- drop.tip(tree_consensus, drop_list)
-    all_trees      <- lapply(all_trees, drop.tip, tip = drop_list)
-    class(all_trees) <- "multiPhylo"
-    ntips <- length(tree_consensus$tip.label)
-    cat(sprintf("✅ Tips remaining / Осталось таксонов: %d\n", ntips))
-  }
-}
-
-# EN: Final ultrametric check & tree sampling / Финальная проверка и выборка    
-tree_consensus <- fix_ultrametric(tree_consensus)
-all_trees      <- lapply(all_trees, fix_ultrametric)
+tree_beast <- treeio::read.beast(consensus_path)
+tree_consensus <- tree_beast@phylo
+all_trees <- read.nexus(posterior_path)
 class(all_trees) <- "multiPhylo"
 
-n_sample <- safe_num("How many trees to sample? / Сколько деревьев взять? (10-100 recommended)", 10, min_v = 1, max_v = length(all_trees))
-trees_sample <- sample(all_trees, n_sample)
-class(trees_sample) <- "multiPhylo"
-cat(sprintf("✅ Sampled / Выбрано: %d trees\n", n_sample))
+# EN: Analysis Mode Selection / Выбор режима анализа
+mode_str <- if (interactive()) readline("Mode 1 (Single) or 2 (Multi)? / Режим 1 или 2? [2]: ") else "2"
+analysis_mode <- ifelse(nchar(trimws(mode_str)) == 0, 2, as.integer(mode_str))
+
+# EN: Tree sampling with burnin / Выборка деревьев с учетом burnin
+if (analysis_mode == 2) {
+  n_total <- length(all_trees)
+  burnin_idx <- floor(n_total * 0.10) # 10% burnin
+  n_sample <- input_scalar("Number of trees to sample / Кол-во деревьев", 10)
+  set.seed(42)
+  trees_sample <- all_trees[sample((burnin_idx + 1):n_total, n_sample)]
+  class(trees_sample) <- "multiPhylo"
+} else {
+  trees_sample <- NULL
+}
+
+# EN: Outgroup removal via regex patterns / Удаление аутгрупп по паттернам
+if (interactive() && tolower(readline("Drop outgroups? / Удалять аутгруппы? (y/n): ")) == "y") {
+  og_str <- readline("Enter patterns (comma-separated) / Введите паттерны: ")
+  og_patterns <- trimws(unlist(strsplit(og_str, "[,;]+")))
+  matching_tips <- unique(unlist(lapply(og_patterns, function(p) {
+    pattern <- paste0("(^|[^A-Za-z0-9])", p, "($|[^A-Za-z0-9])")
+    tree_consensus$tip.label[grepl(pattern, tree_consensus$tip.label, ignore.case = TRUE, perl = TRUE)]
+  })))
+  
+  if (length(matching_tips) > 0) {
+    tree_consensus <- drop.tip(tree_consensus, matching_tips)
+    if (analysis_mode == 2) {
+      trees_sample <- lapply(trees_sample, drop.tip, tip = matching_tips)
+      class(trees_sample) <- "multiPhylo"
+    }
+    tree_beast <- treeio::drop.tip(tree_beast, matching_tips)
+  }
+}
+
+tree_consensus <- fix_ultrametric(tree_consensus)
+ntips <- length(tree_consensus$tip.label)
 ```
 
 ---
@@ -151,163 +136,177 @@ cat(sprintf("✅ Sampled / Выбрано: %d trees\n", n_sample))
 **EN:** The core diagnostic loop. It runs bgmyc.singlephy, evaluates acceptance rates and logposterior stationarity, plots trace graphs, and prompts you to adjust MCMC parameters before scaling to multiple trees.    
 **RU:** Основной диагностический цикл. Запускает bgmyc.singlephy, оценивает acceptance rates и стационарность логарифма правдоподобия, строит графики и предлагает настроить параметры MCMC перед многодеревным анализом.
 
-```{r diagnostics-loop}
-# EN: Initial parameters / Начальные параметры    
-prm <- list(
-  mcmc = 5000, burnin = 1000, thinning = 10,
-  py1 = 0, py2 = 1.5, pc1 = 0, pc2 = 2.0,
-  t1 = 2, t2 = min(35, ntips - 5),
-  scale = c(25, 10, 5), start = c(1, 0.5, floor(ntips/3))
+```{r diagnostics}
+params <- list(
+  mcmc = 10000, burnin = 1000, thinning = 10,
+  py1 = 0, py2 = 1.5, pc1 = 0, pc2 = 2,
+  t1 = 2, t2 = min(35, ntips - 1),
+  scale = c(20, 10, 5), start = c(1, 1, floor(ntips/3))
 )
-prm$start[3] <- max(prm$t1 + 1, min(prm$start[3], prm$t2 - 1)) # Safety clamp
 
-# EN: Diagnostic printer & plotter / Функция диагностики и графиков
-show_diag <- function(res, prm) {
-  cat("\n📊 FULL DIAGNOSTICS / ПОЛНАЯ ДИАГНОСТИКА\n")
-  cat(sprintf("⚙️  Parameters: mcmc=%d | burnin=%d | thin=%d\n", prm$mcmc, prm$burnin, prm$thinning))
-  acc <- res$accept
-  cat(sprintf("📈 Acceptance rates: py=%.2f | pc=%.2f | t=%.2f [Optimal/Оптимум: 0.20–0.40]\n", acc[1], acc[2], acc[3]))
-
-  # 🔢 ESS Calculation (Effective Sample Size)
-  if (requireNamespace("mcmcse", quietly = TRUE)) {
-    ess_vals <- sapply(1:4, function(col) round(mcmcse::ess(res$par[, col])))
-    cat(sprintf("🔢 ESS: py=%d | pc=%d | th=%d | logL=%d [Optimal/Оптимум: >200]\n", 
-                ess_vals[1], ess_vals[2], ess_vals[3], ess_vals[4]))
-  } else {
-    cat("⚠️  ESS: package 'mcmcse' not installed. Run install.packages('mcmcse') for full diagnostics.\n")
-    ess_vals <- NULL
-  }
-
-  par_vec <- res$par[, 4]
-  q <- split(par_vec, cut(seq_along(par_vec), 4, labels = FALSE))
-  cv <- sd(sapply(q, var)) / mean(sapply(q, var))
-  cat(sprintf("📉 Stationarity (CV<0.6): %s\n", ifelse(cv < 0.6, "✅ YES/ДА", "⚠️ CHECK/ПРОВЕРЬТЕ")))
-
-  cat("\n💡 Recommendations / Рекомендации:\n")
-  if (acc[1] > 0.50) cat("   ↑ scale[1] or ↑ py2 (py too conservative)\n")
-  if (acc[1] < 0.15) cat("   ↓ scale[1] (py too bold)\n")
-  if (acc[2] > 0.50) cat("   ↑ scale[2]\n")
-  if (acc[2] < 0.15) cat("   ↓ scale[2]\n")
-  if (!is.null(ess_vals) && any(ess_vals < 200)) {
-    cat("   ↑ mcmc or ↓ thinning (ESS < 200: цепь требует больше независимых шагов)\n")
-  }
-  if (cv >= 0.6) cat("   ↑ burnin to 30% mcmc or ↑ mcmc (chain not stationary)\n")
-  if (cv < 0.6 && all(acc > 0.2 & acc < 0.45)) cat("   ✅ Parameters optimal. Ready for multi-tree.\n")
-
-  cat("\n🖼️  Opening trace plots... / Открываю графики сходимости...\n")
-  plot(res)
-  cat("👀 Close plot window when done. / Закройте окно графиков, когда закончите.\n")
-}
-
-# EN: Interactive tuning loop / Интерактивный цикл настройки    
-cat("\n🔄 Starting diagnostic loop / Запускаю диагностику...\n")
+# EN: Diagnostic tuning loop / Цикл диагностики и настройки
 repeat {
-  cat("🚀 Running single-tree MCMC / Запуск MCMC на одном дереве...\n")
-  res <- bgmyc.singlephy(
-    phylo = tree_consensus, mcmc = prm$mcmc, burnin = prm$burnin, thinning = prm$thinning,
-    py1 = prm$py1, py2 = prm$py2, pc1 = prm$pc1, pc2 = prm$pc2, t1 = prm$t1, t2 = prm$t2,
-    scale = prm$scale, start = prm$start
+  res_single <- bgmyc.singlephy(
+    phylo = tree_consensus, mcmc = params$mcmc, burnin = params$burnin, 
+    thinning = params$thinning, py1 = params$py1, py2 = params$py2, 
+    pc1 = params$pc1, pc2 = params$pc2, t1 = params$t1, t2 = params$t2, 
+    scale = params$scale, start = params$start
   )
-  show_diag(res, prm)
   
-  cat("❓ Use these parameters for multi-tree analysis? / Использовать эти параметры? (y/n): ")
-  if (!interactive()) break
-  ans <- tolower(trimws(readline("")))
-  if (ans %in% c("y", "да", "")) break
+  # EN: Convergence checks / Проверка сходимости
+  ar <- res_single$accept
+  cat(sprintf("Acceptance rates: py=%.3f | pc=%.3f | th=%.3f\n", ar[1], ar[2], ar[3]))
+  if (requireNamespace("mcmcse", quietly = TRUE)) {
+    ess_vals <- sapply(1:4, function(col) round(mcmcse::ess(res_single$par[, col])))
+    cat(sprintf("ESS: py=%d | pc=%d | th=%d | logL=%d [Target > 200]\n", 
+                ess_vals[1], ess_vals[2], ess_vals[3], ess_vals[4]))
+  }
   
-  cat("\n🔧 Adjust parameters (Enter=keep current) / Настройка параметров (Enter=оставить текущее)\n")
-  prm$mcmc     <- safe_num("mcmc", prm$mcmc, min_v = 1000, hint = "[↑=more accurate]")
-  prm$burnin   <- safe_num("burnin", prm$burnin, min_v = 100, max_v = prm$mcmc - 100, hint = "[20-30% of mcmc]")
-  prm$thinning <- safe_num("thinning", prm$thinning, min_v = 1, hint = "[↓ autocorrelation]")
-  prm$py2      <- safe_num("py2", prm$py2, min_v = prm$py1 + 0.1, hint = "[≤1.5 recommended]")
-  prm$pc2      <- safe_num("pc2", prm$pc2, min_v = prm$pc1 + 0.1, hint = "[≤2.0]")
-  prm$t2       <- safe_num("t2", prm$t2, max_v = ntips - 2, hint = "[< number of tips]")
-  prm$scale    <- c(safe_num("scale[1]", prm$scale[1], min_v = 1),
-                    safe_num("scale[2]", prm$scale[2], min_v = 1),
-                    safe_num("scale[3]", prm$scale[3], min_v = 1))
-  prm$start    <- c(safe_num("start[1]", prm$start[1], min_v = 0),
-                    safe_num("start[2]", prm$start[2], min_v = 0),
-                    safe_num("start[3]", prm$start[3], min_v = prm$t1 + 1, max_v = prm$t2 - 1))
-  prm$start[3] <- max(prm$t1 + 1, min(prm$start[3], prm$t2 - 1))
+  plot(res_single)
+  
+  if (!interactive() || tolower(readline("Accept parameters? / Принять параметры? (y/n): ")) != "n") break
+  
+  # EN: Update parameters / Обновление параметров
+  params$mcmc <- input_scalar("mcmc", params$mcmc)
+  params$burnin <- input_scalar("burnin", params$burnin)
+  params$thinning <- input_scalar("thinning", params$thinning)
+  params$scale <- input_vector("scale", params$scale)
+  params$start <- input_vector("start", params$start)
 }
 ```
 
 ---
 
-## 4. Multi-Tree Analysis & Final Output / Многодеревный анализ и финальный вывод    
-**EN:** Once diagnostics are stable, bgmyc.multiphylo runs on the sampled trees. The workflow then builds a conspecificity probability matrix, visualizes it as a heatmap, and extracts species clusters at your chosen threshold.    
-**RU:** После стабилизации диагностики bgmyc.multiphylo запускается на выбранных деревьях. Строится матрица вероятностей конспецифичности, визуализируется как тепловая карта, и извлекаются кластеры видов при выбранном пороге.    
+## 4. Multi-Tree Analysis / Многодеревный анализ    
+**EN:** Once diagnostics are stable, bgmyc.multiphylo runs on the sampled trees.     
+**RU:** После стабилизации диагностики bgmyc.multiphylo запускается на выбранных деревьях.     
 
-```{r final-analysis}
-cat("\n🌲 Running multi-tree analysis / Запуск анализа на множестве деревьев...\n")
-result_multi <- bgmyc.multiphylo(
-  multiphylo = trees_sample, mcmc = prm$mcmc, burnin = prm$burnin, thinning = prm$thinning,
-  py1 = prm$py1, py2 = prm$py2, pc1 = prm$pc1, pc2 = prm$pc2,
-  t1 = prm$t1, t2 = prm$t2, scale = prm$scale, start = prm$start
-)
-
-# 📐 Gelman-Rubin (R̂) convergence check across tree chains
-if (requireNamespace("mcmcse", quietly = TRUE) && length(result_multi) > 1) {
-  cat("\n📐 Gelman-Rubin R̂ convergence check / Проверка сходимости R̂...\n")
-  chains_list <- lapply(result_multi, function(res) res$par[, 3]) # threshold parameter
-  names(chains_list) <- paste0("Tree_", seq_along(result_multi))
+```{r multi}
+if (analysis_mode == 2) {
+  # EN: Parallel execution / Параллельное выполнение
+  n_workers <- min(parallel::detectCores(logical = FALSE) - 1, length(trees_sample))
+  plan(multisession, workers = max(1, n_workers))
   
-  gr_result <- tryCatch(mcmcse::gelman(chains_list), error = function(e) NULL)
-  if (!is.null(gr_result)) {
-    rhat <- round(gr_result$Rhat, 3)
-    cat(sprintf("🔍 Gelman-Rubin R̂ (threshold): %.3f [Optimal/Оптимум: < 1.05]\n", rhat))
-    if (rhat > 1.05) {
-      cat("⚠️  R̂ > 1.05: Chains show divergence. Increase mcmc/burnin or check tree topologies.\n")
-    } else {
-      cat("✅ Chains converged stably across posterior trees / Цепи сошлись стабильно.\n")
+  final_res <- future_lapply(seq_along(trees_sample), function(i) {
+    bgmyc.singlephy(
+      phylo = trees_sample[[i]], mcmc = params$mcmc, burnin = params$burnin, 
+      thinning = params$thinning, py1 = params$py1, py2 = params$py2, 
+      pc1 = params$pc1, pc2 = params$pc2, t1 = params$t1, t2 = params$t2, 
+      scale = params$scale, start = params$start
+    )
+  }, future.seed = TRUE)
+  class(final_res) <- "multibgmyc"
+  
+  # EN: Gelman-Rubin R-hat / Статистика Гелмана-Рубина
+  if (requireNamespace("mcmcse", quietly = TRUE) && length(final_res) > 1) {
+    chains_list <- lapply(final_res, function(res) res$par[, 3])
+    names(chains_list) <- paste0("Tree_", seq_along(final_res))
+    rhat <- round(mcmcse::gelman(chains_list)$Rhat, 3)
+    cat(sprintf("Gelman-Rubin R-hat: %.3f [Target < 1.05]\n", rhat))
+  }
+} else {
+  final_res <- list(res_single)
+  class(final_res) <- "multibgmyc"
+}
+```
+---
+
+
+## 5. Custom Interactive Visualization / Кастомная визуализация (Plotly)    
+**EN:** Custom interactive visualization.     
+**RU:** Визуализация результатов.     
+
+```{r plotly_viz}
+probmat <- spec.probmat(final_res)
+
+# EN: Synchronize tip order between tree and matrix / Синхронизация порядка таксонов
+p_tree <- suppressWarnings(ggtree(tree_beast, layout = "rectangular"))
+tips_data <- p_tree$data %>% filter(isTip) %>% arrange(y)
+tip_order <- tips_data$label
+probmat <- probmat[tip_order, tip_order]
+
+# EN: Extract posterior probabilities for branches / Извлечение posterior для ветвей
+post_col <- intersect(c("posterior", "prob", "Posterior"), colnames(p_tree$data))[1]
+node_posterior <- p_tree$data[[post_col]]
+names(node_posterior) <- p_tree$data$node
+
+# EN: Custom color gradient function / Функция градиента цвета
+get_pp_color <- function(pp) {
+  if(is.na(pp)) return("#CCCCCC")
+  pp <- max(0, min(1, pp))
+  colors <- list(c(0.0, 1.0, 0.0, 0.0), c(0.25, 1.0, 0.5, 0.0), 
+                 c(0.5, 1.0, 1.0, 0.0), c(0.75, 0.5, 1.0, 0.0), c(1.0, 0.0, 0.7, 0.0))
+  for(i in 1:(length(colors)-1)) {
+    if(pp >= colors[[i]][1] && pp <= colors[[i+1]][1]) {
+      t <- (pp - colors[[i]][1]) / (colors[[i+1]][1] - colors[[i]][1])
+      r <- colors[[i]][2] + t * (colors[[i+1]][2] - colors[[i]][2])
+      g <- colors[[i]][3] + t * (colors[[i+1]][3] - colors[[i]][3])
+      b <- colors[[i]][4] + t * (colors[[i+1]][4] - colors[[i]][4])
+      return(sprintf("#%02X%02X%02X", round(r*255), round(g*255), round(b*255)))
     }
   }
+  return("#CCCCCC")
 }
 
-cat( "\n🌡️  Building heatmap / Строю тепловую карту...\n ")
-prob_mat  <- spec.probmat(result_multi)
+# EN: Build Plotly Tree / Построение дерева в Plotly
+edges <- p_tree$data %>% filter(!is.na(parent))
+fig_tree <- plot_ly()
+for(i in 1:nrow(edges)) {
+  child <- edges[i, ]
+  parent <- p_tree$data %>% filter(node == child$parent)
+  branch_color <- get_pp_color(node_posterior[as.character(child$node)])
+  fig_tree <- fig_tree %>% add_segments(
+    x = parent$x, xend = child$x, y = child$y, yend = child$y,
+    line = list(color = branch_color, width = 5), showlegend = FALSE)
+  fig_tree <- fig_tree %>% add_segments(
+    x = parent$x, xend = parent$x, y = parent$y, yend = child$y,
+    line = list(color = branch_color, width = 5), showlegend = FALSE)
+}
 
-# 🌐 Interactive visualization / Интерактивная визуализация
-# EN: Displays in RStudio Viewer by default. Add save_html to export.
-# RU: По умолчанию открывается в Viewer RStudio. Укажите save_html для экспорта.
-plot.interactive.probmat(
-  x = prob_mat, 
-  tree = tree_consensus,
-  palette = "green",          # "green", "viridis", "RdYlBu", "classic"
-  tree_width = 0.25,          # Доля ширины под дерево (0–1)
-  save_html = "figures/interactive_heatmap.html"  # NULL = только Viewer
+# EN: Build Plotly Heatmap / Построение тепловой карты
+fig_heat <- plot_ly(
+  z = probmat, x = 1:nrow(probmat), y = 1:ncol(probmat), type = "heatmap",
+  colorscale = list(list(0.0, "#F7FCF5"), list(0.5, "#41AB5D"), list(1.0, "#00441B")),
+  zmin = 0, zmax = 1, showscale = TRUE
 )
 
-# EN: Open the .html file in any browser to zoom, pan, and hover for exact probabilities.
-# RU: Откройте .html файл в браузере для масштабирования, перемещения и просмотра точных вероятностей при наведении.
+# EN: Combine 1:1 / Объединение 1:1
+fig_combined <- subplot(fig_tree, fig_heat, nrows = 1, widths = c(0.5, 0.5), shareY = TRUE) %>%
+  layout(yaxis = list(autorange = "reversed", showticklabels = FALSE),
+         xaxis = list(showticklabels = FALSE),
+         xaxis2 = list(showticklabels = FALSE),
+         yaxis2 = list(autorange = "reversed", showticklabels = FALSE))
 
-cat("\n🔍 Delimitation (PP > 0.05) / Делимитация (PP > 0.05)...\n")
-out <- bgmyc.point(prob_mat, ppcutoff = 0.05)
-cat("✅ Clusters / Кластеров:", length(out), "\n")
-for (i in seq_along(out)) {
-  cat(paste0("  ", i, ": ", paste(out[[i]][1:4], collapse = ", "),
-             if (length(out[[i]]) > 4) "...\n" else "\n"))
+htmlwidgets::saveWidget(fig_combined, "bGMYC_interactive_heatmap.html", selfcontained = TRUE)
+```
+---
+
+## 6. Delimitation & Export / Делимитация и экспорт    
+**EN:** Delimitation.     
+**RU:** Делимитация.     
+
+```{r export}
+# EN: Export clusters at different thresholds / Экспорт кластеров на разных порогах
+for (p in c(0.05, 0.01)) {
+  out <- bgmyc.point(probmat, ppcutoff = p)
+  df <- data.frame(
+    Sequence = unlist(out),
+    MOTU_bGMYC = rep(seq_along(out), lengths(out)),
+    stringsAsFactors = FALSE
+  )
+  write.table(df, file = sprintf("Delimitation_bGMYC_%.2f.csv", p),
+              row.names = FALSE, sep = ";", dec = ".", quote = FALSE, fileEncoding = "UTF-8")
 }
 
-# EN: Export cluster probabilities to CSV / Экспорт вероятностей кластеров в CSV    
-spec_out <- bgmyc.spec(result_multi)
-write.csv(spec_out$specprobs, file = "bGMYC_clusters.csv", row.names = FALSE, fileEncoding = "UTF-8")
-
-save(prm, res, result_multi, prob_mat, out, file = "bGMYC_final_results.RData")
-cat("💾 Results saved / Результаты сохранены.\n🎉 Analysis complete / Анализ завершён!\n")
+# EN: Export full probability matrix / Экспорт полной матрицы вероятностей
+spec_out <- bgmyc.spec(final_res)
+write.csv(spec_out$specprobs, "bGMYC_full_probs.csv", row.names = FALSE)
 ```
-
 ---
 
 ## ⚡ Performance & Export / Производительность и экспорт    
 **EN:** bgmyc.multiphylo() automatically parallelizes across physical CPU cores. To limit cores (e.g., to 6), run before analysis: options(mc.cores = 6).    
 **RU:** bgmyc.multiphylo() автоматически использует все физические ядра. Чтобы ограничить число ядер (например, до 6), выполните перед запуском: options(mc.cores = 6).    
-
-```{r performance-export}
-# EN: Multi-tree analysis now runs in parallel automatically across all CPU cores / Многодеревный анализ теперь автоматически запускается параллельно на всех ядрах CPU.    
-# EN: Export clusters to CSV (Excel-compatible) / Экспорт кластеров в CSV (совместимо с Excel)     
-# EN: Optional: Validate model fit by comparing Yule vs Coalescent rates / Опционально: проверь соответствие модели, сравнив скорости видообразования и коалесценции    
-
 ---
 
 ## 📊 Parameter Reference Guide / Справочник по параметрам
