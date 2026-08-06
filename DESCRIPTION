@@ -2,16 +2,14 @@ Package: bGMYC4
 Type: Package
 Title: Bayesian General Mixed Yule-Coalescent Model for Species
         Delimitation
-Version: 4.1.3
+Version: 4.1.5
 Authors@R: c(
     person("Noah", "Reid", email = "noah.reid@gmail.com",
-           role = "aut", comment = "Original author of bGMYC"),
+           role = c("aut", "cph"), comment = "Original author of bGMYC"),
     person("Dmitry", "Karabanov", email = "dk@ibiw.ru",
            role = c("aut", "cre"),
-           comment = c(ORCID = "0000-0001-6008-7441")),
-    person("Qwen", "3.6", role = "ctb",
-           comment = "Code modernization and R 4.x compatibility")
-    )
+           comment = c(ORCID = "0000-0001-6008-7441"))
+  )
 Description: Implements a Bayesian version of the general mixed
     Yule-coalescent model for species delimitation. It uses Markov
     Chain Monte Carlo simulation to evaluate the posterior
