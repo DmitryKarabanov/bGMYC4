@@ -13,7 +13,7 @@ bgmyc.dataprep <- function(tr) {
   numnod <- tr$Nnode
   numall <- numnod + numtip
 
-  # Вычисление branching.times напрямую
+  # Calculating branching times directly
   bt <- -branching.times(tr)
   bt[bt > -1e-06] <- -1e-06
   names(bt) <- NULL
@@ -22,7 +22,7 @@ bgmyc.dataprep <- function(tr) {
   internod <- sb[2:numnod] - sb[1:(numnod - 1)]
   internod[numnod] <- 0 - sb[numnod]
 
-  # Функции обхода дерева (рекурсия ограничена высотой дерева, c() здесь безопасен)
+  # Tree traversal functions
   get_nesting <- function(x) {
     if (x < numtip + 2) return(integer(0))
     anc <- as.integer(tr$edge[tr$edge[, 2] == x, 1])
@@ -40,7 +40,7 @@ bgmyc.dataprep <- function(tr) {
     res
   }
 
-  # Предвыделение списков вместо sapply с динамическим ростом
+  # Preallocating lists
   nesting <- vector("list", numnod)
   nested <- vector("list", numnod)
   for (i in seq_len(numnod)) {
@@ -52,7 +52,7 @@ bgmyc.dataprep <- function(tr) {
   ancs <- cbind(tr$edge[pmatch((1:numnod + numtip), tr$edge[, 2]), 1], (1:numnod + numtip))
   bt.ancs <- cbind(bt[ancs[, 1] - numtip], bt[ancs[, 2] - numtip])
 
-  # Предвыделение основных структур данных
+  # Preallocation of basic data structures
   mrca.nodes <- vector("list", nthresh)
   nod.types  <- vector("list", nthresh)
   n_vec      <- vector("list", nthresh)
@@ -75,7 +75,7 @@ bgmyc.dataprep <- function(tr) {
     n_val <- length(mrca_idx)
     n_vec[[j]] <- n_val
 
-    # Предвыделение матриц фиксированного размера
+    # Preallocation of fixed-size matrices
     list.s.nod[[j]] <- matrix(0, nrow = n_val + 1, ncol = numnod)
     list.i.mat[[j]] <- matrix(0, nrow = n_val + 1, ncol = numnod)
 
@@ -92,7 +92,7 @@ bgmyc.dataprep <- function(tr) {
       }
       list.s.nod[[j]][i, ] <- list.s.nod[[j]][i, ord_bt]
 
-      # Векторизованное заполнение вместо поэлементного
+      # Vectorized filling
       mask <- ifelse(list.s.nod[[j]][i, ] == 2, 2, 
                      ifelse(list.s.nod[[j]][i, ] == 1, 1, 0))
       list.i.mat[[j]][i, ] <- cumsum(mask)
@@ -108,7 +108,7 @@ bgmyc.dataprep <- function(tr) {
     list.i.mat[[j]][last_row, ] <- cumsum(ifelse(is_zero, 1, ifelse(is_two, -1, 0))) + 1
   }
 
-  # Прямой возврат списка (убраны assign() и local.env для скорости и чистоты кода)
+  # Direct return of a list
   list(
     mrca.nodes = mrca.nodes,
     nod.types  = nod.types,

@@ -1,5 +1,5 @@
 spec.probmat <- function(res) {
-  # Оптимизированная внутренняя функция для получения списка кластеров
+  # Optimized internal function for getting list of clusters
   spec.list <- function(res, thresh) {
     tr       <- res$tree
     spec     <- tr$tip.label
@@ -7,7 +7,7 @@ spec.probmat <- function(res) {
     max.mrca <- res$mrca[[thresh]] + numtip
     numspec  <- length(max.mrca)
     
-    # Рекурсивный сбор tip-индексов
+    # Recursive collection of tip indexes
     nest.tip <- function(nod, tr) {
       child <- tr$edge[tr$edge[, 1] == nod, 2]
       tips  <- integer(0)
@@ -21,7 +21,7 @@ spec.probmat <- function(res) {
       tips
     }
     
-    # Формируем список кластеров без медленного rbind()
+    # Generating a list of clusters
     res_list <- vector("list", length(max.mrca))
     for (i in seq_along(max.mrca)) {
       tip.name <- tr$tip.label[nest.tip(max.mrca[i], tr)]
@@ -32,7 +32,7 @@ spec.probmat <- function(res) {
     missing <- spec[is.na(match(spec, assigned_names))]
     
     if (length(missing) > 0) {
-      # Добавляем оставшиеся таксоны как одиночные кластеры
+      
       for (s in missing) {
         numspec <- numspec + 1
         res_list[[length(res_list) + 1]] <- data.frame(spec = numspec, name = s, stringsAsFactors = FALSE)
@@ -55,7 +55,7 @@ spec.probmat <- function(res) {
     
     for (j in seq_len(n_samples)) {
       assignlists <- spec.list(res, res$par[j, 3])
-      # Группируем имена таксонов по ID вида (вместо цикла с which())
+      
       clusters <- split(as.character(assignlists$sample_name), assignlists$GMYC_spec)
       for (cl in clusters) {
         probmat[cl, cl] <- probmat[cl, cl] + add_val

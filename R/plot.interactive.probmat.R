@@ -1,19 +1,19 @@
 #' @export
 plot.interactive.probmat <- function(x, tree,
-    palette = "green",
-    show_tree = TRUE,
-    tree_width = 0.3,
-    width = 1400,
-    height = 1000,
-    save_html = NULL,
-    # === НОВЫЕ ПАРАМЕТРЫ ДЛЯ КАСТОМНОГО РЕЖИМА ===
-    custom_mode = TRUE,            # FALSE = old PNG-режим, TRUE = new vector subplot
-    posterior_col = NULL,          # posterior (NULL = auto: "posterior", "prob", ...)
-    branch_gradient = NULL,        # gradient (NULL = red-green)
-    tip_label_step = NULL,         # labes (NULL = auto: ~1/40)
-    treeio_tree = NULL,            # treedata (optional)
-    ...
-) {
+                                     palette = "green",
+                                     show_tree = TRUE,
+                                     tree_width = 0.3,
+                                     width = 1400,
+                                     height = 1000,
+                                     save_html = NULL,
+                                     custom_mode = TRUE,
+                                     posterior_col = NULL,
+                                     branch_gradient = NULL,
+                                     tip_label_step = NULL,
+                                     treeio_tree = NULL,
+                                     ...) {
+  oldpar <- par(no.readonly = TRUE)
+  on.exit(par(oldpar))
   
   if (!requireNamespace("plotly", quietly = TRUE)) {
     stop("Package 'plotly' is required. Please install: install.packages('plotly')")
@@ -26,7 +26,6 @@ plot.interactive.probmat <- function(x, tree,
   probmat <- x
   ntip <- length(tree$tip.label)
   tree <- ape::reorder.phylo(tree, order = "cladewise")
-  
   edge <- tree$edge[which(tree$edge[, 2] < (ntip + 1)), ]
   tiplab <- tree$tip.label[edge[, 2]]
   orderedmat <- probmat[tiplab, ]
@@ -74,10 +73,8 @@ plot.interactive.probmat <- function(x, tree,
     ape::plot.phylo(tree, show.tip.label = FALSE, no.margin = TRUE,
                     label.offset = 0, direction = "rightwards", ...)
     dev.off()
-    
     img_data <- base64enc::dataURI(file = tmp_file, mime = "image/png")
     unlink(tmp_file)
-    
     p <- plotly::layout(p,
                         images = list(list(
                           source = img_data,
@@ -117,7 +114,10 @@ plot.interactive.probmat <- function(x, tree,
     htmlwidgets::saveWidget(p, file = save_html, selfcontained = TRUE)
     message("Interactive plot saved to: ", normalizePath(save_html))
   }
+
+  if (interactive() && is.null(save_html)) { 
+    print(p)
+  }
   
-  print(p)
   invisible(p)
 }
