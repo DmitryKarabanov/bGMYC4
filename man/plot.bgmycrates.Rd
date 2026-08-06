@@ -16,7 +16,11 @@ output from checkrates function.}
 additional arguments passed to plot.}
 }
 \details{
-plots relative coalescent and Yule rates for model fit evaluation}
+plots relative coalescent and Yule rates for model fit evaluation
+}
+\value{
+No return value, called for side effects (produces a 2x2 panel of diagnostic plots).
+}
 \author{
 Noah M. Reid
 Maintainer: Dmitry Karabanov <dk@ibiw.ru>

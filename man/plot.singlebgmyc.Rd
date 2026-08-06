@@ -19,6 +19,9 @@ the interval at which samples are retained from the Markov Chain.}
 \item{...}{
 additional arguments passed to plot.}
 }
+\value{
+No return value, called for side effects (produces a 2x2 panel of trace plots).
+}
 \author{
 Noah M. Reid
 Maintainer: Dmitry Karabanov <dk@ibiw.ru>

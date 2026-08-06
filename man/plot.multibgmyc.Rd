@@ -17,6 +17,10 @@ logical. If TRUE, produces trace plots. If FALSE, returns a matrix of pooled par
 \item{...}{
 additional arguments passed to plot.}
 }
+\value{
+If \code{plot = TRUE}: no return value, called for side effects (produces a 2x2 panel of trace plots).
+If \code{plot = FALSE}: a matrix of pooled MCMC parameters from all trees.
+}
 \author{
 Noah M. Reid
 Maintainer: Dmitry Karabanov <dk@ibiw.ru>

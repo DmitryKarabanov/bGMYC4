@@ -45,7 +45,7 @@ plot(result.single)
 # Run bGMYC on multiple trees (multiphylo object).
 # Wrapped in \donttest{} to bypass CRAN check parallel worker limits.
 \donttest{
-result.multi <- bgmyc.multiphylo(multiphylo = east10[1:2],, mcmc = 100, burnin = 1, thinning = 10)
+result.multi <- bgmyc.multiphylo(multiphylo = east10[1:2], mcmc = 100, burnin = 1, thinning = 10)
 
 # For multiple trees, visualize MCMC output OR pool samples 
 # from across trees into a single matrix using plot=FALSE.

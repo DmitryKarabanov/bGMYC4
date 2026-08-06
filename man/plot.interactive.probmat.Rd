@@ -62,18 +62,12 @@
   Supports two modes: standard (PNG-based tree overlay) and custom (vector-based subplot with interactive branches).
 }
 \examples{
-\dontrun{
-  # Standard mode (backward compatible)
-  plot.interactive.probmat(probmat, tree, save_html = "output.html")
-  
-  # Custom mode with posterior-colored tree
-  library(treeio)
-  tree_beast <- read.beast("consensus.nexus")
-  plot.interactive.probmat(probmat, tree, 
-                           custom_mode = TRUE, 
-                           treeio_tree = tree_beast,
-                           palette = "viridis",
-                           save_html = "output_custom.html")
+\donttest{
+data(east10)
+set.seed(1)
+result <- bgmyc.singlephy(east10[[1]], mcmc = 1000, burnin = 200, thinning = 10)
+prob_mat <- spec.probmat(result)
+p <- plot.interactive.probmat(prob_mat, east10[[1]])
 }
 }
 \keyword{hplot}

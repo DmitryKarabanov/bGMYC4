@@ -29,12 +29,12 @@ Visualizes the conspecificity probability matrix alongside the phylogenetic tree
 Enhanced version with customizable color palettes and export options.
 }
 \examples{
-\dontrun{
-  data(east10)
-  result  <- bgmyc.singlephy(east10[[1]], mcmc = 1000, burnin = 200)
-  prob_mat  <- spec.probmat(result)
-  plot(prob_mat, east10[[1]])
-  plot(prob_mat, east10[[1]], palette = "viridis", save_pdf = "fig.pdf")
+\donttest{
+data(east10)
+set.seed(1)
+result <- bgmyc.singlephy(east10[[1]], mcmc = 1000, burnin = 200, thinning = 10)
+prob_mat <- spec.probmat(result)
+p <- plot.interactive.probmat(prob_mat, east10[[1]])
 }
 }
 \author{
