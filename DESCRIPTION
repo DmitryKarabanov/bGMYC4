@@ -2,7 +2,7 @@ Package: bGMYC4
 Type: Package
 Title: Bayesian General Mixed Yule-Coalescent Model for Species
         Delimitation
-Version: 4.1.5
+Version: 4.1.6
 Authors@R: c(
     person("Noah", "Reid", email = "noah.reid@gmail.com",
            role = c("aut", "cph"), comment = "Original author of bGMYC"),
