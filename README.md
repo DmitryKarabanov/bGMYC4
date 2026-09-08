@@ -4,7 +4,7 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 <!-- CRAN Version -->
-![CRAN status](https://www.r-pkg.org/badges/version/bGMYC4?v=2)
+[![CRAN status](https://www.r-pkg.org/badges/version/bGMYC4)](https://cran.r-project.org/package=bGMYC4)
 
 <!-- Total Downloads -->
 [![Total downloads](https://cranlogs.r-pkg.org/badges/grand-total/bGMYC4)](https://cran.r-project.org/package=bGMYC4)
