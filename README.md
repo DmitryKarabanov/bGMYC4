@@ -3,6 +3,19 @@
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
+<!-- CRAN Version -->
+![CRAN status](https://www.r-pkg.org/badges/version/bGMYC4?v=2)
+
+<!-- Total Downloads -->
+[![Total downloads](https://cranlogs.r-pkg.org/badges/grand-total/bGMYC4)](https://cran.r-project.org/package=bGMYC4)
+
+<!-- Last Month Downloads -->
+[![Downloads per month](https://cranlogs.r-pkg.org/badges/bGMYC4)](https://cran.r-project.org/package=bGMYC4)
+
+<!-- Lifecycle -->
+[![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
+
+
 **Bayesian General Mixed Yule-Coalescent (GMYC) model for species delimitation in R ≥ 4.0**
 
 ---
@@ -33,7 +46,12 @@ bGMYC4 implements a Bayesian version of the General Mixed Yule-Coalescent model 
 
 ## 📦 Installation 
 
-### 🔹 From GitHub (recommended)
+### 🔹 From CRAN (recommended)
+```r
+install.packages("bGMYC4")
+```
+
+### 🔹 From GitHub (latest version)
 ```r
 if (!requireNamespace("remotes", quietly = TRUE)) {
   install.packages("remotes")
