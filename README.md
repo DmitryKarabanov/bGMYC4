@@ -9,9 +9,6 @@
 <!-- Total Downloads -->
 [![Total downloads](https://cranlogs.r-pkg.org/badges/grand-total/bGMYC4)](https://cran.r-project.org/package=bGMYC4)
 
-<!-- Last Month Downloads -->
-[![Downloads per month](https://cranlogs.r-pkg.org/badges/bGMYC4)](https://cran.r-project.org/package=bGMYC4)
-
 <!-- Lifecycle -->
 [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 
