@@ -123,6 +123,7 @@ cat("Delimited clusters:", length(out), "\n")
 | Function details | `?bgmyc.multiphylo`, `?spec.probmat` | Parameter explanations |
 | Built-in data | `?east10` | Simulated dataset for testing |
 | Performance tips | `vignette("bGMYC4-interactive", package = "bGMYC4")` | Section "Performance & Export" |
+| Example | `inst/scripts/bGMYC.R` | Simple interactive script
 
 ---
 
