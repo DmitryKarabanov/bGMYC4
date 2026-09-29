@@ -1,6 +1,8 @@
 # bGMYC4
 ## *Reid's Bayesian species delimitation, made reproducible and accessible*
 
+<img src="man/figures/logo.png" align="right" height="139" alt="bGMYC4 logo" />
+
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 <!-- CRAN Version -->
