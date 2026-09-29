@@ -1,0 +1,144 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 347" width="300" height="347" role="img" aria-label="bGMYC4 logo">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F7FCF5"/>
+      <stop offset="42%" stop-color="#A1D99B"/>
+      <stop offset="100%" stop-color="#005A32"/>
+    </linearGradient>
+
+    <clipPath id="hex">
+      <polygon points="150,33.5 271.2,103.5 271.2,243.5 150,313.5 28.8,243.5 28.8,103.5"/>
+    </clipPath>
+  </defs>
+
+  <!-- Шестиугольник -->
+  <polygon
+    points="150,33.5 271.2,103.5 271.2,243.5 150,313.5 28.8,243.5 28.8,103.5"
+    fill="url(#bg)"
+    stroke="#004d2a"
+    stroke-width="7"
+    stroke-linejoin="round"
+  />
+
+  <g clip-path="url(#hex)">
+    <!-- Дерево слева: ЧЁРНАЯ ОБВОДКА -->
+    <g
+      fill="none"
+      stroke="#000000"
+      stroke-width="7.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      opacity="1"
+    >
+      <path d="M45 155 H65"/>
+      <path d="M65 155 V125 H90"/>
+      <path d="M65 155 V185 H90"/>
+
+      <path d="M90 125 V110 H135"/>
+      <path d="M90 125 V140 H135"/>
+
+      <path d="M90 185 V170 H135"/>
+      <path d="M90 185 V200 H135"/>
+    </g>
+
+    <!-- Дерево слева: ЯРКО-БЕЛЫЙ ЦВЕТ -->
+    <g
+      fill="none"
+      stroke="#FFFFFF"
+      stroke-width="5.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      opacity="1"
+    >
+      <path d="M45 155 H65"/>
+      <path d="M65 155 V125 H90"/>
+      <path d="M65 155 V185 H90"/>
+
+      <path d="M90 125 V110 H135"/>
+      <path d="M90 125 V140 H135"/>
+
+      <path d="M90 185 V170 H135"/>
+      <path d="M90 185 V200 H135"/>
+    </g>
+
+    <!-- Матрица 4x4: зелёно-красная палитра, белые стали розовее, розовые стали краснее -->
+    <g opacity="1">
+      <!-- Row 1 -->
+      <rect x="155" y="105" width="22" height="22" rx="3" fill="#005A32" stroke="#000000" stroke-width="1.2"/>
+      <rect x="181" y="105" width="22" height="22" rx="3" fill="#41AB5D" stroke="#000000" stroke-width="1.2"/>
+      <rect x="207" y="105" width="22" height="22" rx="3" fill="#F8C8C0" stroke="#000000" stroke-width="1.2"/>
+      <rect x="233" y="105" width="22" height="22" rx="3" fill="#D6604D" stroke="#000000" stroke-width="1.2"/>
+
+      <!-- Row 2 -->
+      <rect x="155" y="131" width="22" height="22" rx="3" fill="#41AB5D" stroke="#000000" stroke-width="1.2"/>
+      <rect x="181" y="131" width="22" height="22" rx="3" fill="#005A32" stroke="#000000" stroke-width="1.2"/>
+      <rect x="207" y="131" width="22" height="22" rx="3" fill="#D6604D" stroke="#000000" stroke-width="1.2"/>
+      <rect x="233" y="131" width="22" height="22" rx="3" fill="#F8C8C0" stroke="#000000" stroke-width="1.2"/>
+
+      <!-- Row 3 -->
+      <rect x="155" y="157" width="22" height="22" rx="3" fill="#F8C8C0" stroke="#000000" stroke-width="1.2"/>
+      <rect x="181" y="157" width="22" height="22" rx="3" fill="#D6604D" stroke="#000000" stroke-width="1.2"/>
+      <rect x="207" y="157" width="22" height="22" rx="3" fill="#005A32" stroke="#000000" stroke-width="1.2"/>
+      <rect x="233" y="157" width="22" height="22" rx="3" fill="#41AB5D" stroke="#000000" stroke-width="1.2"/>
+
+      <!-- Row 4 -->
+      <rect x="155" y="183" width="22" height="22" rx="3" fill="#D6604D" stroke="#000000" stroke-width="1.2"/>
+      <rect x="181" y="183" width="22" height="22" rx="3" fill="#F8C8C0" stroke="#000000" stroke-width="1.2"/>
+      <rect x="207" y="183" width="22" height="22" rx="3" fill="#41AB5D" stroke="#000000" stroke-width="1.2"/>
+      <rect x="233" y="183" width="22" height="22" rx="3" fill="#005A32" stroke="#000000" stroke-width="1.2"/>
+    </g>
+
+    <!-- Тень подписи -->
+    <text
+      x="152"
+      y="262"
+      text-anchor="middle"
+      font-family="Arial, Helvetica, sans-serif"
+      font-size="34"
+      font-weight="700"
+      letter-spacing="0.5"
+      textLength="132"
+      lengthAdjust="spacingAndGlyphs"
+      fill="#003d22"
+      opacity="0.28"
+    >
+      bGMYC4
+    </text>
+
+    <!-- Чёрная обводка подписи -->
+    <text
+      x="150"
+      y="260"
+      text-anchor="middle"
+      font-family="Arial, Helvetica, sans-serif"
+      font-size="34"
+      font-weight="700"
+      letter-spacing="0.5"
+      textLength="132"
+      lengthAdjust="spacingAndGlyphs"
+      fill="none"
+      stroke="#000000"
+      stroke-width="2.2"
+      stroke-linejoin="round"
+      stroke-linecap="round"
+    >
+      bGMYC4
+    </text>
+
+    <!-- Белая подпись поверх обводки -->
+    <text
+      x="150"
+      y="260"
+      text-anchor="middle"
+      font-family="Arial, Helvetica, sans-serif"
+      font-size="34"
+      font-weight="700"
+      letter-spacing="0.5"
+      textLength="132"
+      lengthAdjust="spacingAndGlyphs"
+      fill="#FFFFFF"
+    >
+      bGMYC4
+    </text>
+  </g>
+</svg>
