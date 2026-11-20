@@ -279,7 +279,7 @@ GPL (≥ 3). See the DESCRIPTION file.
 Institute for Biology of Inland Waters, RAS
 ORCID: 0000-0001-6008-7441
 
-Original bGMYC implementation: Noah Reid.
+Original bGMYC implementation: *Noah Reid*.
 
 ## Acknowledgements
 
