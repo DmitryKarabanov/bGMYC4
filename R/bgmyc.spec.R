@@ -12,6 +12,14 @@
 #' @return A list with `specprobs` and, optionally, `matrices`.
 #' @export
 bgmyc.spec <- function(res, filename = NULL, cmatrix = NULL) {
+    ## validate cmatrix BEFORE agg_tree() uses it
+    if (!is.null(cmatrix)) {
+      tips <- if (inherits(res, "singlebgmyc")) res$tree$tip.label
+      else if (inherits(res, "multibgmyc")) res[[1]]$tree$tip.label
+      else stop("bgmyc.spec() expects a 'singlebgmyc' or 'multibgmyc' object.")
+      if (is.null(rownames(cmatrix)) || !all(tips %in% rownames(cmatrix)))
+        stop("cmatrix must have rownames covering all tree tip labels.")
+    }
   agg_tree <- function(single) {
     tr     <- single$tree
     numtip <- length(tr$tip.label)
@@ -82,10 +90,6 @@ bgmyc.spec <- function(res, filename = NULL, cmatrix = NULL) {
 
   output <- list(specprobs = specprobs)
   if (!is.null(cmatrix)) {
-    tips <- if (inherits(res, "singlebgmyc")) res$tree$tip.label else res[[1]]$tree$tip.label
-    if (is.null(rownames(cmatrix)) || !all(tips %in% rownames(cmatrix)))
-      stop("cmatrix must have rownames covering all tree tip labels.")
-    cmatrix <- cmatrix[tips, , drop = FALSE]
     ## one matrix per retained sample, taken from the per-threshold cache
     if (inherits(res, "singlebgmyc")) {
       thr <- res$par[, 3]

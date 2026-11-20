@@ -57,12 +57,6 @@ bgmyc.gibbs <- function(data, m, burnin = 1, thinning = 1,
     warning("'mcmc' < 100: too few iterations for reliable MCMC inference; Reid & Carstens (2012) recommend >= 10 000 per tree.")
   if (burnin / m > 0.9)
     warning(sprintf("'burnin' is %.0f%% of 'mcmc': almost the entire chain will be discarded.", 100 * burnin / m))
-  if (t1 < 2)
-    warning("'t1' < 2: the threshold cannot be below 2 species;
-            the effective prior is truncated to [2, ", min(t2, NNodes), "].")
-  if (t2 > NNodes)
-    warning("'t2' > Nnode (", NNodes, "): thresholds above Nnode are unreachable;
-            the effective prior is truncated to [", max(2, t1), ", ", NNodes, "].")
 
   vth   <- matrix(0, nrow = m, ncol = p + 1)
   th0   <- start

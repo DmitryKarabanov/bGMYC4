@@ -28,6 +28,7 @@ bgmyc.dataprep <- function(tr) {
   }
 
   numtip <- length(tr$tip.label)
+  if (numtip < 3) stop("GMYC requires at least 3 tips.")
   numnod <- tr$Nnode
 
   # Calculating branching times directly
@@ -36,7 +37,7 @@ bgmyc.dataprep <- function(tr) {
   names(bt) <- NULL
   sb <- sort(bt)
   nthresh <- numnod
-  internod <- sb[2:numnod] - sb[1:(numnod - 1)]
+  internod <- sb[seq(2, numnod)] - sb[seq_len(numnod - 1)]
   internod[numnod] <- 0 - sb[numnod]
 
   # Internal descendants of every node (ancestors are not needed by the model)
@@ -69,7 +70,7 @@ bgmyc.dataprep <- function(tr) {
 
   ord_bt <- order(bt)
 
-  for (j in 2:nthresh) {
+  for (j in seq(2, nthresh)) {
     threshy <- sb[j]
     tmp <- (bt.ancs[, 1] < threshy) & (bt.ancs[, 2] >= threshy)
     nod.type <- tmp + (bt >= threshy)

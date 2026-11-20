@@ -13,6 +13,7 @@
 #' @export
 bgmyc.lik <- function(params, data) {
   t_idx <- as.integer(params[3])
+  if (is.na(t_idx) || t_idx < 2 || t_idx > length(data$n)) return(-Inf)
   n     <- data$n[[t_idx]]
   mat   <- data$list.i.mat[[t_idx]]
   s_nod <- data$list.s.nod[[t_idx]]

@@ -19,7 +19,7 @@ spec.probmat <- function(res) {
     keep   <- as.integer(names(freq[freq > 0]))
     probmat <- matrix(0, numtip, numtip,
                       dimnames = list(tr$tip.label, tr$tip.label))
-    tot <- sum(freq)                        # = nrow(res$par)
+    tot <- sum(freq)                       
     for (t in keep) {
       cid <- .threshold_clusters(res, t, desc, numtip)
       w   <- freq[as.character(t)] / tot
@@ -39,8 +39,9 @@ spec.probmat <- function(res) {
               "pooled probabilities then weight trees by sample count. ",
               "Use identical mcmc/burnin/thinning for equal-weight model averaging (Reid & Carstens 2012).")
     for (q in seq_along(res)) {
-      sq <- spec.probmat(res[[q]])          # within-tree normalised matrix
+      sq <- spec.probmat(res[[q]])
       attr(sq, "class") <- NULL
+      sq <- sq[tr$tip.label, tr$tip.label, drop = FALSE]
       probmat <- probmat + sq * samp_vec[q]
     }
     probmat <- probmat / sum(samp_vec)

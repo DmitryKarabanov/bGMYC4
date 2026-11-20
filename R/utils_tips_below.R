@@ -9,14 +9,16 @@
   nnode  <- tr$Nnode
   child  <- split(tr$edge[, 2], tr$edge[, 1])
   desc   <- vector("list", nnode)
-  bt     <- -ape::branching.times(tr)      # more negative = older
-  ord    <- order(bt, decreasing = TRUE)   # youngest nodes first
-  for (v in ord) {
-    cd    <- child[[as.character(numtip + v)]]
-    tips  <- cd[cd <= numtip]
-    nodes <- cd[cd >  numtip]
-    desc[[v]] <- c(tips, unlist(desc[nodes - numtip]))
+  get_desc <- function(v) {
+    if (!is.null(desc[[v]])) return(desc[[v]])
+    cd <- child[[as.character(numtip + v)]]
+    if (is.null(cd)) cd <- integer(0)
+    res <- c(cd[cd <= numtip],
+             unlist(lapply(cd[cd > numtip] - numtip, get_desc)))
+    desc[[v]] <<- res
+    res
   }
+  for (v in seq_len(nnode)) get_desc(v)
   desc
 }
 
