@@ -18,10 +18,10 @@ bgmyc.lik <- function(params, data) {
   s_nod <- data$list.s.nod[[t_idx]]
   x     <- data$internod
   p     <- c(rep(params[2], n), params[1])
-  
+
   mat_p <- mat^p                 # Direct ^: accurate and fast
   mat_p[mat == 0] <- 0           # Empty intervals do not contribute even when p=0.
-  
+
   ## ML-based lambda estimates (Nee 2001)
   denom_c <- sum(mat_p[1:n, , drop = FALSE] %*% x)
   denom_y <- sum(mat_p[n + 1, ] %*% x)
@@ -29,11 +29,11 @@ bgmyc.lik <- function(params, data) {
   lambda_c <- sum(s_nod[1:n, , drop = FALSE]) / denom_c
   lambda_y <- sum(s_nod[n + 1, ]) / denom_y
   lambda   <- c(rep(lambda_c, n), lambda_y)
-  
+
   b <- as.numeric(t(mat_p) %*% lambda)   # the total speed b_i in each interval
   if (any(b <= 0)) return(-Inf)
-  
-  out <- sum(log(b) - b * x)             
+
+  out <- sum(log(b) - b * x)
   if (!is.finite(out)) return(-Inf)
   out
 }

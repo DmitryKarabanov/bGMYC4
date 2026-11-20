@@ -21,7 +21,7 @@ plot.bgmycprobmat <- function(x, tree,
                               ...) {
   oldpar <- par(no.readonly = TRUE)
   on.exit(par(oldpar))
-  
+
   # Data preparation
   probmat <- x
   ntip <- length(tree$tip.label)
@@ -30,14 +30,14 @@ plot.bgmycprobmat <- function(x, tree,
   tiplab <- tree$tip.label[edge[, 2]]
   orderedmat <- probmat[tiplab, ]
   orderedmat <- orderedmat[, tiplab]
-  
+
   # PDF export setup
   if (!is.null(save_pdf)) {
     dir.create(dirname(save_pdf), showWarnings = FALSE, recursive = TRUE)
     grDevices::pdf(file = save_pdf, width = 10, height = 8, useDingbats = FALSE)
     on.exit(grDevices::dev.off(), add = TRUE)
   }
-  
+
   # Palette selection
   breaks <- c(0, 0.05, 0.49999999, 0.899999999, 0.9499999999, 1)
   if (palette == "viridis") {
@@ -47,16 +47,16 @@ plot.bgmycprobmat <- function(x, tree,
   } else {
     cols <- grDevices::heat.colors(5)
   }
-  
+
   # Plot tree (left panel)
   par(fig = c(0, 0.5, 0, 1))
   ape::plot.phylo(tree, show.tip.label = FALSE, no.margin = TRUE, label.offset = 0.1)
-  
+
   # Plot heatmap
   par(fig = c(0.47, 0.96, 0.035, 0.965), new = TRUE)
   image(x = c(1:ntip + 1), y = c(1:ntip), z = orderedmat,
         axes = FALSE, breaks = breaks, col = cols)
-  
+
   # Plot legend (right strip)
   par(fig = c(0.968, 0.99, 0.035, 0.965), new = TRUE)
   leg <- matrix(nrow = 1, ncol = 20, data = seq(from = 0.025, to = 1, by = 0.05))

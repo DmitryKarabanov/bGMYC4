@@ -13,7 +13,7 @@ plot.singlebgmyc <- function(x, burnin = 0, thinning = 1, ...) {
             "'burnin'/'thinning' here re-filter the retained samples, not the original chain.")
   oldpar <- par(no.readonly = TRUE)
   on.exit(par(oldpar))
-  
+
   result <- x
   par(mfrow = c(2, 2))
   ylabels <- c("p.div", "p.coal", "threshold", "logposterior")

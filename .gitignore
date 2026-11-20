@@ -7,25 +7,18 @@
 # Check artifacts
 *.Rcheck/
 *.tar.gz
+bGMYC4_check*/
+bGMYC4_check*.log
 
-# Temporary files
+# Temporary / export files
+bGMYC_full_probs.csv
+bGMYC_interactive_heatmap.html
+Delimitation_*.csv
 *.csv
 
 # Documentation build
 doc/
 Meta/
-.Rproj.user
-.Rproj.user
-.Rproj.user
-.Rproj.user
-.Rproj.user
-.Rproj.user
-.Rproj.user
-.Rproj.user
-.Rproj.user
-.Rproj.user
-.Rproj.user
-.Rproj.user
 .Rproj.user
 .Rproj.user
 .Rproj.user

@@ -17,7 +17,7 @@
 #' plot(rates)
 #' @export
 checkrates <- function(result) {
-  
+
   bgmyc.lambda <- function(params, data) {
     t_idx  <- as.integer(params[3])
     n      <- data$n[[t_idx]]
@@ -28,7 +28,7 @@ checkrates <- function(result) {
       as.numeric(data$list.i.mat[[t_idx]][n + 1, ]^p[n + 1] %*% data$internod)
     return(c(lam_div, lam_coal))  # [1]=lambda.div, [2]=lambda.coal
   }
-  
+
   rates_list <- list()
   idx <- 1
   if (inherits(result, "multibgmyc")) {
@@ -50,7 +50,7 @@ checkrates <- function(result) {
       idx <- idx + 1
     }
   }
-  
+
   branchrates <- do.call(rbind, rates_list)
   ratemod <- ((branchrates[, 3]^branchrates[, 1])) / branchrates[, 3]
   branchrates <- cbind(branchrates, branchrates[, 4] * ratemod)

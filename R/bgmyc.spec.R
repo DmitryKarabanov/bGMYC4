@@ -48,7 +48,7 @@ bgmyc.spec <- function(res, filename = NULL, cmatrix = NULL) {
     list(strings = strings, counts = counts, n_samples = sum(freq),
          clusters = cl, matrices = mats, thresholds = keep)
   }
-  
+
   if (inherits(res, "singlebgmyc")) {
     a       <- agg_tree(res)
     per_t   <- a
@@ -69,7 +69,7 @@ bgmyc.spec <- function(res, filename = NULL, cmatrix = NULL) {
   } else {
     stop("bgmyc.spec() expects a 'singlebgmyc' or 'multibgmyc' object.")
   }
-  
+
   # specprobs: identical table to the per-sample implementation
   tab <- tapply(counts, strings, sum)
   ord <- order(as.numeric(tab), decreasing = TRUE)
@@ -79,7 +79,7 @@ bgmyc.spec <- function(res, filename = NULL, cmatrix = NULL) {
                           stringsAsFactors = FALSE)
   if (!is.null(filename))
     write.table(specprobs, filename, row.names = FALSE, col.names = FALSE)
-  
+
   output <- list(specprobs = specprobs)
   if (!is.null(cmatrix)) {
     tips <- if (inherits(res, "singlebgmyc")) res$tree$tip.label else res[[1]]$tree$tip.label

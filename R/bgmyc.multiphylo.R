@@ -43,7 +43,7 @@ bgmyc.multiphylo <- function(multiphylo, mcmc, burnin, thinning,
   force(py1); force(py2); force(pc1); force(pc2); force(t1); force(t2)
   force(scale); force(start); force(sampler); force(likelihood); force(prior)
   force(cores); force(seed)
-  
+
   ntre <- length(multiphylo)
   if (ntre < 1L) stop("multiphylo is empty.")
   labs <- multiphylo[[1]]$tip.label
@@ -51,7 +51,7 @@ bgmyc.multiphylo <- function(multiphylo, mcmc, burnin, thinning,
     stop("All trees must share the same tip label set (prune or rename tips before analysis).")
   message("bGMYC4 multi-tree: ", ntre, " trees, cores = ", cores,
           if (is.null(seed)) " (seed = NULL: NOT reproducible)" else paste0(", seed = ", seed))
-  
+
   # one independent thread of random numbers for each tree
   seeds <- NULL
   if (!is.null(seed)) {
@@ -68,7 +68,7 @@ bgmyc.multiphylo <- function(multiphylo, mcmc, burnin, thinning,
     seeds <- vector("list", ntre)
     for (i in seq_len(ntre)) { s <- parallel::nextRNGStream(s); seeds[[i]] <- s }
   }
-  
+
   run_one <- function(i) {
     if (!is.null(seeds)) {
       RNGkind("L'Ecuyer-CMRG")
@@ -80,9 +80,9 @@ bgmyc.multiphylo <- function(multiphylo, mcmc, burnin, thinning,
             scale = scale, start = start,
             likelihood = likelihood, prior = prior)
   }
-  
+
   if (cores <= 1L || ntre == 1L) {
-    out <- lapply(seq_len(ntre), run_one)      
+    out <- lapply(seq_len(ntre), run_one)
   } else {
     cl <- parallel::makeCluster(min(cores, ntre))
     on.exit(parallel::stopCluster(cl), add = TRUE)

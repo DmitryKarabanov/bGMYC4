@@ -42,7 +42,7 @@ bgmyc.point <- function(probmat, ppcutoff){
       pointest[[nspec]] <- seqs[i]
     }
     if(flip > 1){
-      warning("Not all members of each cluster have conspecificity probability 
+      warning("Not all members of each cluster have conspecificity probability
               greater than specified with every other member in the cluster.")
     }
   }

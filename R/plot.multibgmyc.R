@@ -12,11 +12,11 @@ plot.multibgmyc <- function(x, plot = TRUE, ...) {
   # Accumulate in a list instead of rbind() in a loop
   par_list <- lapply(result, function(res) res$par)
   parmat <- do.call(rbind, par_list)
-  
+
   if (plot) {
     oldpar <- par(no.readonly = TRUE)
     on.exit(par(oldpar))
-    
+
     par(mfrow = c(2, 2))
     ylabels <- c("p.div", "p.coal", "threshold", "logposterior")
     for (i in 1:4) {

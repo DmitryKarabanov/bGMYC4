@@ -26,6 +26,15 @@ bgmyc.chains <- function(phylo, mcmc, burnin, thinning,
                          prior = bgmyc.prior,
                          nchains = 4L, seed = NULL, cores = 1L,
                          dispersed = TRUE) {
+  # Force all arguments so the worker closure captures plain values, not lazy
+  # promises. On parallel workers the caller's frame (e.g. a script-local
+  # `params`) is not available, so an unforced promise like mcmc = params$mcmc
+  # would fail with "object 'params' not found".
+  force(phylo); force(mcmc); force(burnin); force(thinning)
+  force(py1); force(py2); force(pc1); force(pc2); force(t1); force(t2)
+  force(scale); force(start); force(sampler); force(likelihood); force(prior)
+  force(nchains); force(seed); force(cores); force(dispersed)
+
   nchains <- as.integer(nchains)
   if (nchains < 2L) stop("nchains must be >= 2 (Gelman-Rubin needs >= 2 chains).")
   if (is.null(seed))

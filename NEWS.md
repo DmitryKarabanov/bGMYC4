@@ -49,6 +49,11 @@
   passed from a calling script) were serialized to workers, where the caller's
   environment was unavailable, causing `object 'params' not found` errors when
   `cores > 1`. Sequential runs (`cores = 1`) were unaffected.
+- `bgmyc.chains()` now forces its arguments before dispatching work to
+  parallel workers. Previously, lazy argument promises (e.g. `mcmc = params$mcmc`
+  passed from a calling script) were serialized to workers, where the caller's
+  environment was unavailable, causing `object 'params' not found` errors when
+  `cores > 1`. Sequential runs (`cores = 1`) were unaffected.
 
 ## DOCUMENTATION
 

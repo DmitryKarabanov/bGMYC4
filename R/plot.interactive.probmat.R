@@ -28,14 +28,14 @@ plot.interactive.probmat <- function(x, tree,
                                      ...) {
   oldpar <- par(no.readonly = TRUE)
   on.exit(par(oldpar))
-  
+
   if (!requireNamespace("plotly", quietly = TRUE)) {
     stop("Package 'plotly' is required. Please install: install.packages('plotly')")
   }
   if (!requireNamespace("base64enc", quietly = TRUE)) {
     stop("Package 'base64enc' is required. Please install: install.packages('base64enc')")
   }
-  
+
   # === 1. Data preparation ===
   probmat <- x
   ntip <- length(tree$tip.label)
@@ -44,7 +44,7 @@ plot.interactive.probmat <- function(x, tree,
   tiplab <- tree$tip.label[edge[, 2]]
   orderedmat <- probmat[tiplab, ]
   orderedmat <- orderedmat[, tiplab]
-  
+
   # === 2. Color palette ===
   if (palette == "green") {
     colors <- c("#F7FCF5", "#E5F5E0", "#C7E9C0", "#A1D99B",
@@ -56,7 +56,7 @@ plot.interactive.probmat <- function(x, tree,
   } else {
     colors <- c("#FFFFCC", "#FFEDA0", "#FED976", "#FEB24C", "#FD8D3C", "#FC4E2A", "#E31A1C")
   }
-  
+
   # === 3. Heatmap data ===
   df <- expand.grid(row = rownames(orderedmat), col = colnames(orderedmat))
   df$prob <- as.vector(orderedmat)
@@ -70,7 +70,7 @@ plot.interactive.probmat <- function(x, tree,
                          ifelse(df$prob >= 0.05, "Likely different (p<0.5)",
                                 "Different species (p<0.05)"))))
   )
-  
+
   # === 4. Build heatmap ===
   p <- plotly::plot_ly(
     data = df, x = ~col, y = ~row, z = ~prob, type = "heatmap",
@@ -78,7 +78,7 @@ plot.interactive.probmat <- function(x, tree,
     width = width, height = height,
     hoverlabel = list(bgcolor = "white", font = list(color = "black"))
   )
-  
+
   # === 5. Add tree on the left ===
   if (show_tree) {
     tmp_file <- tempfile(fileext = ".png")
@@ -122,7 +122,7 @@ plot.interactive.probmat <- function(x, tree,
                         showlegend = FALSE
     )
   }
-  
+
   # === 6. Save to HTML ===
   if (!is.null(save_html)) {
     if (!requireNamespace("htmlwidgets", quietly = TRUE))
@@ -132,9 +132,9 @@ plot.interactive.probmat <- function(x, tree,
     message("Interactive plot saved to: ", normalizePath(save_html))
   }
 
-  if (interactive() && is.null(save_html)) { 
+  if (interactive() && is.null(save_html)) {
     print(p)
   }
-  
+
   invisible(p)
 }

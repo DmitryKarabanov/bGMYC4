@@ -294,20 +294,26 @@ htmlwidgets::saveWidget(fig_combined, "bGMYC_interactive_heatmap.html", selfcont
 
 ```{r export}
 # EN: Export clusters at different thresholds / Экспорт кластеров на разных порогах
-for (p in c(0.05, 0.01)) {
-  out <- bgmyc.point(probmat, ppcutoff = p)
+thresholds <- c(0.05, 0.01)
+for (p in thresholds) {
+  # EN: single-linkage warning is expected; see README "Choosing ppcutoff".
+  # RU: предупреждение single linkage ожидаемо; см. README "Choosing ppcutoff".
+  out <- suppressWarnings(bgmyc.point(probmat, ppcutoff = p))
   df <- data.frame(
     Sequence = unlist(out),
     MOTU_bGMYC = rep(seq_along(out), lengths(out)),
     stringsAsFactors = FALSE
   )
-  write.table(df, file = sprintf("Delimitation_bGMYC_%.2f.csv", p),
-              row.names = FALSE, sep = ";", dec = ".", quote = FALSE, fileEncoding = "UTF-8")
+  fname <- sprintf("Delimitation_bGMYC_%.3f.csv", p)
+  utils::write.table(df, file = fname,
+                     row.names = FALSE, sep = ";", dec = ".", quote = FALSE)
+  cat(sprintf("✅ ppcutoff=%.3f → %d clusters → %s\n", p, length(out), fname))
 }
 
 # EN: Export full probability matrix / Экспорт полной матрицы вероятностей
 spec_out <- bgmyc.spec(final_res)
-write.csv(spec_out$specprobs, "bGMYC_full_probs.csv", row.names = FALSE)
+utils::write.csv(spec_out$specprobs, "bGMYC_full_probs.csv", row.names = FALSE)
+cat("✅ bGMYC_full_probs.csv saved\n")
 ```
 ---
 

@@ -27,7 +27,7 @@ bgmyc.gibbs <- function(data, m, burnin = 1, thinning = 1,
                         likelihood, prior) {
   NNodes <- data$tree$Nnode
   p <- length(start)
-  
+
   ## Input check: it does not change the results in correct runs.
   if (m < 1 || burnin < 0 || burnin >= m || thinning < 1)
     stop("Need mcmc >= 1, 0 <= burnin < mcmc, thinning >= 1.")
@@ -35,7 +35,7 @@ bgmyc.gibbs <- function(data, m, burnin = 1, thinning = 1,
     stop("'scale' must be three positive numbers: proposal widths for py, pc and t.")
   if (!(py1 < py2 && pc1 < pc2 && t1 < t2))
     stop("Prior bounds must satisfy py1 < py2, pc1 < pc2 and t1 < t2.")
-  
+
   if (any(start[1:2] <= 0))
     stop("start[1] and start[2] must be > 0 (gamma proposals).")
   if (start[3] < 2 || start[3] > NNodes)
@@ -58,38 +58,38 @@ bgmyc.gibbs <- function(data, m, burnin = 1, thinning = 1,
   if (burnin / m > 0.9)
     warning(sprintf("'burnin' is %.0f%% of 'mcmc': almost the entire chain will be discarded.", 100 * burnin / m))
   if (t1 < 2)
-    warning("'t1' < 2: the threshold cannot be below 2 species; 
+    warning("'t1' < 2: the threshold cannot be below 2 species;
             the effective prior is truncated to [2, ", min(t2, NNodes), "].")
   if (t2 > NNodes)
-    warning("'t2' > Nnode (", NNodes, "): thresholds above Nnode are unreachable; 
+    warning("'t2' > Nnode (", NNodes, "): thresholds above Nnode are unreachable;
             the effective prior is truncated to [", max(2, t1), ", ", NNodes, "].")
-  
+
   vth   <- matrix(0, nrow = m, ncol = p + 1)
   th0   <- start
   f0    <- likelihood(th0, data) + prior(th0, py1, py2, pc1, pc2, t1, t2)
   if (!is.finite(f0))
     stop("Initial state has zero posterior density; check start, priors and tree.")
   arate <- numeric(p)
-  
+
   mover <- function(j, th) {
     if (j == 1) return(rgamma(1, shape = scale[1], rate = scale[1]/th[1]))
     if (j == 2) return(rgamma(1, shape = scale[2], rate = scale[2]/th[2]))
     round(th[3] + rnorm(1) * scale[3])   # симметричное предложение, Hastings = 1
   }
-  
+
   step <- max(1L, round(m/10))           # protection against %% 0 in short circuits
   for (i in 1:m) {
     for (j in 1:p) {
-      th1 <- th0                         
+      th1 <- th0
       th1[j] <- mover(j, th0)
-      
+
       if (j < 3) {
         f1 <- likelihood(th1, data) + prior(th1, py1, py2, pc1, pc2, t1, t2)
         acc <- exp(f1 - f0) *
           (dgamma(th0[j], shape = scale[j], rate = scale[j]/th1[j]) /
              dgamma(th1[j], shape = scale[j], rate = scale[j]/th0[j]))
       } else {
-        if (th1[3] >= 2 && th1[3] <= NNodes) {   
+        if (th1[3] >= 2 && th1[3] <= NNodes) {
           f1 <- likelihood(th1, data) + prior(th1, py1, py2, pc1, pc2, t1, t2)
         } else {
           f1 <- -Inf
@@ -98,20 +98,20 @@ bgmyc.gibbs <- function(data, m, burnin = 1, thinning = 1,
       }
       if (!is.finite(acc)) acc <- 0
       if (acc > 1) acc <- 1
-      
+
       u <- runif(1) < acc
-      if (u) { th0 <- th1; f0 <- f1 }    
+      if (u) { th0 <- th1; f0 <- f1 }
       arate[j] <- arate[j] + u
     }
     vth[i, 1:p] <- th0
     vth[i, p+1] <- f0                    # Always log-posterior(th0)
     if (i %% step == 0 || i == m) message(round(100*i/m), "%")
   }
-  
-  keep <- seq(burnin + thinning, m, by = thinning)  
+
+  keep <- seq(burnin + thinning, m, by = thinning)
   if (length(keep) == 0)
     stop("No samples retained: check mcmc/burnin/thinning.")
-  
+
   out <- list(par = vth[keep, , drop = FALSE], accept = arate/m,
               tree = data$tree, mrca = data$mrca.nodes,
               priors = c(py1 = py1, py2 = py2, pc1 = pc1, pc2 = pc2, t1 = t1, t2 = t2))
