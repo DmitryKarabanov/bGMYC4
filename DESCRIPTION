@@ -1,0 +1,49 @@
+Package: bGMYC4
+Type: Package
+Title: Bayesian General Mixed Yule-Coalescent Model for Species
+        Delimitation
+Version: 4.3.0
+Authors@R: c(
+    person("Noah", "Reid", email = "noah.reid@gmail.com",
+           role = c("aut", "cph"), comment = "Original author of bGMYC"),
+    person("Dmitry", "Karabanov", email = "dk@ibiw.ru",
+           role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0001-6008-7441"))
+  )
+Description: Implements a Bayesian version of the general mixed
+    Yule-coalescent (GMYC) model for species delimitation from
+    single-locus data (Reid & Carstens 2012, BMC Evolutionary
+    Biology 12:196). Markov Chain Monte Carlo sampling evaluates
+    the posterior distribution of species boundaries under flexible
+    uniform priors, with branching rates profiled at their maximum
+    likelihood estimates. Supports pooling over multiple posterior
+    trees to propagate phylogenetic uncertainty into marginal
+    probabilities of conspecificity, convergence diagnostics
+    (split-Rhat, ESS, prior-vs-posterior contraction), and
+    interactive heatmap visualization of the resulting matrices.
+License: GPL (>= 3)
+Encoding: UTF-8
+LazyData: true
+Depends: R (>= 4.0.0)
+Imports:
+    ape (>= 5.0),
+    parallel
+Suggests:
+    mcmcse,
+    plotly,
+    base64enc,
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown,
+    htmltools,
+    htmlwidgets,
+    treeio,
+    ggtree,
+    future,
+    future.apply,
+    dplyr
+VignetteBuilder: knitr, rmarkdown
+URL: https://github.com/DmitryKarabanov/bGMYC4
+BugReports: https://github.com/DmitryKarabanov/bGMYC4/issues
+Roxygen: list(markdown = TRUE)
+Config/roxygen2/version: 8.1.1

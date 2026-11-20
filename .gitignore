@@ -1,0 +1,34 @@
+# R-specific
+.Rhistory
+.RData
+.Rproj.user
+*.Rproj
+
+# Check artifacts
+*.Rcheck/
+*.tar.gz
+
+# Temporary files
+*.csv
+
+# Documentation build
+doc/
+Meta/
+.Rproj.user
+.Rproj.user
+.Rproj.user
+.Rproj.user
+.Rproj.user
+.Rproj.user
+.Rproj.user
+.Rproj.user
+.Rproj.user
+.Rproj.user
+.Rproj.user
+.Rproj.user
+.Rproj.user
+.Rproj.user
+.Rproj.user
+.Rproj.user
+.Rproj.user
+.Rproj.user

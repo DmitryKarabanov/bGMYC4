@@ -1,0 +1,39 @@
+bibentry(
+  bibtype = "Manual",
+  title = "bGMYC4: Bayesian General Mixed Yule-Coalescent Model for Species Delimitation",
+  author = c(
+    person("Dmitry", "Karabanov",
+           email = "dk@ibiw.ru",
+           comment = c(ORCID = "0000-0001-6008-7441"))
+  ),
+  year = "2026",
+  note = "R package version 4.3.0",
+  url = "https://github.com/DmitryKarabanov/bGMYC4",
+  textVersion = paste(
+    "Karabanov D (2026). bGMYC4: Bayesian General Mixed Yule-Coalescent Model",
+    "for Species Delimitation. R package version 4.3.0.",
+    "https://github.com/DmitryKarabanov/bGMYC4"
+  )
+)
+
+bibentry(
+  bibtype = "Article",
+  title = "Phylogenetic estimation error can decrease the accuracy of species delimitation: a Bayesian implementation of the general mixed Yule-coalescent model",
+  author = c(
+    person("Noah M.", "Reid"),
+    person("Bryan C.", "Carstens")
+  ),
+  journal = "BMC Evolutionary Biology",
+  year = "2012",
+  volume = "12",
+  number = "1",
+  pages = "196",
+  doi = "10.1186/1471-2148-12-196",
+  url = "https://doi.org/10.1186/1471-2148-12-196",
+  textVersion = paste(
+    "Reid NM, Carstens BC (2012). Phylogenetic estimation error can decrease",
+    "the accuracy of species delimitation: a Bayesian implementation of the",
+    "general mixed Yule-coalescent model. BMC Evolutionary Biology, 12:196.",
+    "doi:10.1186/1471-2148-12-196"
+  )
+)
