@@ -20,6 +20,7 @@
 #'   species necessarily exceeds `ppcutoff`; members are connected through
 #'   intermediate individuals (single linkage). A warning flags such chains.
 #' @examples
+#' set.seed(123)
 #' data(east10)
 #' res <- bgmyc.singlephy(east10[[1]], mcmc = 100, burnin = 10, thinning = 10)
 #' bgmyc.point(spec.probmat(res), ppcutoff = 0.5)

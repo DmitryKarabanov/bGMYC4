@@ -14,25 +14,23 @@
 #'   streams are used and the caller's RNG state is restored on exit; if `NULL`,
 #'   results are not reproducible.
 #' @inheritParams bgmyc.singlephy
-#'
 #' @details Recommended protocol of Reid & Carstens (2012): about 10,000
 #'   iterations per tree, burn-in 1,000, thinning 100 (about 90 samples per tree;
 #'   100 trees -> 9,000 pooled samples). Precision comes from pooling across
 #'   trees; Gelman-Rubin Rhat is NOT computed across trees (each tree defines a
 #'   distinct conditional posterior). For replicate chains of ONE tree use
 #'   [bgmyc.chains()] + [bgmyc.convergence()].
-#'
 #' @return Object of class `"multibgmyc"`: a list of `"singlebgmyc"` objects.
 #' @references Reid & Carstens (2012) \doi{10.1186/1471-2148-12-196}.
 #' @examples
 #' data(east10)
-#' res <- bgmyc.multiphylo(east10[1:2], mcmc = 100, burnin = 10, thinning = 10, seed = 42)
+#' res <- bgmyc.multiphylo(east10[1:2], mcmc = 100, burnin = 10, thinning = 10, seed = 123)
 #' pm <- spec.probmat(res)
 #' @export
 bgmyc.multiphylo <- function(multiphylo, mcmc, burnin, thinning,
                              py1 = 0, py2 = 2, pc1 = 0, pc2 = 2,
-                             t1 = 2, t2 = 51,
-                             scale = c(20, 10, 5), start = c(1, 0.5, 50),
+                             t1 = 2, t2 = NULL,
+                             scale = c(20, 10, 5), start = NULL,
                              sampler = bgmyc.gibbs, likelihood = bgmyc.lik,
                              prior = bgmyc.prior, cores = 1L, seed = NULL) {
   # Force all arguments so run_one's closure captures plain values, not lazy
@@ -69,6 +67,12 @@ bgmyc.multiphylo <- function(multiphylo, mcmc, burnin, thinning,
     for (i in seq_len(ntre)) { s <- parallel::nextRNGStream(s); seeds[[i]] <- s }
   }
 
+  NNodes <- multiphylo[[1]]$Nnode
+  if (is.null(t2))    t2 <- NNodes
+  if (is.null(start)) start <- c(max(1e-3, (py1 + py2) / 2),
+                                 max(1e-3, (pc1 + pc2) / 2),
+                                 max(2, (max(2, t1) + min(t2, NNodes)) / 2))
+  
   run_one <- function(i) {
     if (!is.null(seeds)) {
       RNGkind("L'Ecuyer-CMRG")

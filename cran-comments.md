@@ -1,26 +1,27 @@
-## Submission 4.3.0
+## Test environments
 
-This is a major update to the existing CRAN package bGMYC4 (4.1.6).
+* local: Windows, R 4.5.x
+* win-builder: r-devel, r-release, r-oldrel
 
-### Changes since 4.1.6
+## R CMD check results
 
-- **Performance:** `spec.probmat()` is ~1700× faster and `bgmyc.spec()` ~250× faster
-  via threshold-aggregated post-processing (output numerically equivalent, max diff < 1e-14).
-- **New features:** `fix_ultrametric()` (now exported), `bgmyc.chains()`,
-  `bgmyc.convergence()`, `bgmyc.pool()`, `hpd_discrete()`.
-- **Robustness:** Input validation in `bgmyc.gibbs()`, numerical guards in
-  `gmyc.5parameter.lik()`, explicit `ape::` prefixes for parallel workers,
-  `cmatrix` validation in `bgmyc.spec()`.
-- **Bug fixes:** HPD type error in `summary.multibgmyc()`; dead loop in `bgmyc.point()`;
-  removed unused arguments from `plot.interactive.probmat()`; lazy argument promises
-  in `bgmyc.multiphylo()` are now forced before dispatching work to parallel workers
-  (fixes `object 'params' not found` errors with `cores > 1`).
-- **Documentation:** Full migration to roxygen2; corrected bibliographic references
-  (Reid & Carstens 2012 is BMC Evolutionary Biology 12:196, not Mol. Ecol. Res.);
-  new section "Choosing ppcutoff" with empirical guidance.
-- **Dependencies:** `parallel` added to Imports.
+0 errors | 0 warnings | 1 note
 
-### Test environments
+    checking for future file timestamps ... NOTE
+      unable to verify current time
 
-- R 4.5.1, Windows 11 x64 (local)
-- R CMD check --as-cran: 0 errors, 0 warnings, 0 notes
+This note is environmental (the check could not reach an external time
+server) and does not reflect a problem with the package.
+
+## Update notes
+
+This is an update to the existing CRAN package bGMYC4 (currently 4.1.6).
+Version 4.3.0 addresses reviewer comments: it introduces adaptive default
+priors, repairs `fix_ultrametric()`, fixes tip-order handling in
+`spec.probmat()`, strengthens input validation, and adds a `testthat` suite.
+All changes are backward compatible except that the default values of `t2`
+and `start` are now adaptive (documented under "Breaking changes" in NEWS.md).
+
+## Downstream dependencies
+
+There are no downstream dependencies.

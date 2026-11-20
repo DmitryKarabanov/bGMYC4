@@ -14,9 +14,9 @@ bgmyc.chains(
   pc1 = 0,
   pc2 = 2,
   t1 = 2,
-  t2 = 51,
+  t2 = NULL,
   scale = c(20, 10, 5),
-  start = c(1, 0.5, 50),
+  start = NULL,
   sampler = bgmyc.gibbs,
   likelihood = bgmyc.lik,
   prior = bgmyc.prior,
@@ -49,17 +49,16 @@ In principle \code{pc < 1} mimics population decline and \code{pc > 1} growth, b
 because identical haplotypes must be excluded, a strict demographic
 interpretation is not possible.}
 
-\item{t1, t2}{Bounds of the uniform prior on the threshold parameter \code{t},
-which equals the number of delimited species (clusters + singleton tips).
-Use \verb{2 <= t1 <= t2 <= Nnode(tree)}; larger values are unreachable and merely
-truncate the effective prior.}
+\item{t1, t2}{Lower and upper bounds of the threshold prior. \code{t2 = NULL}
+(the default) means the full range \verb{[max(2, t1), Nnode]}; the effective
+prior is always clamped to \verb{[2, Nnode]}.}
 
 \item{scale}{Numeric(3): proposal widths for \code{py}, \code{pc} (mean-preserving gamma
 proposals; larger = more conservative) and \code{t} (rounded normal random walk;
 larger = more liberal). Tune via acceptance rates (target roughly 0.2--0.4).}
 
-\item{start}{Numeric(3): starting values \code{c(py, pc, t)}; must lie inside the
-priors, with \code{start[3]} in \verb{[2, Nnode(tree)]}.}
+\item{start}{Starting values for \verb{(py, pc, t)}. \code{NULL} (the default) uses
+the midpoint of each prior interval, which always lies inside the prior.}
 
 \item{sampler}{MCMC sampler function; default \code{\link[=bgmyc.gibbs]{bgmyc.gibbs()}}.}
 
@@ -88,7 +87,7 @@ overdispersed starts drawn from the priors) for Gelman-Rubin diagnostics.
 \examples{
 data(east10)
 ch <- bgmyc.chains(east10[[1]], mcmc = 100, burnin = 10, thinning = 10,
-                   nchains = 2, seed = 1)
+                   nchains = 2, seed = 123)
 bgmyc.convergence(ch)
 }
 \seealso{

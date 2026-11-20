@@ -27,6 +27,7 @@ Plots a \code{"bgmycprobmat"} matrix ordered by tree topology, alongside the
 tree (cf. Reid & Carstens 2012, Fig. 5).
 }
 \examples{
+set.seed(123)
 data(east10)
 res <- bgmyc.singlephy(east10[[1]], mcmc = 100, burnin = 10, thinning = 10)
 plot(spec.probmat(res), east10[[1]])

@@ -11,6 +11,7 @@
 #'   `lambda.div * t^p.div / t`, i.e. the fold change in speciation rate from
 #'   the root to the last speciation event (Reid & Carstens 2012).
 #' @examples
+#' set.seed(123)
 #' data(east10)
 #' res <- bgmyc.singlephy(east10[[1]], mcmc = 100, burnin = 10, thinning = 10)
 #' rates <- checkrates(res)

@@ -22,10 +22,9 @@ In principle \code{pc < 1} mimics population decline and \code{pc > 1} growth, b
 because identical haplotypes must be excluded, a strict demographic
 interpretation is not possible.}
 
-\item{t1, t2}{Bounds of the uniform prior on the threshold parameter \code{t},
-which equals the number of delimited species (clusters + singleton tips).
-Use \verb{2 <= t1 <= t2 <= Nnode(tree)}; larger values are unreachable and merely
-truncate the effective prior.}
+\item{t1, t2}{Lower and upper bounds of the threshold prior. \code{t2 = NULL}
+(the default) means the full range \verb{[max(2, t1), Nnode]}; the effective
+prior is always clamped to \verb{[2, Nnode]}.}
 }
 \value{
 Log prior density (scalar).

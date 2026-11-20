@@ -14,6 +14,7 @@
 #' @param ... Passed to [ape::plot.phylo()] when drawing the tree.
 #' @return Invisibly, the `plotly` object.
 #' @examplesIf requireNamespace("plotly", quietly = TRUE) && requireNamespace("base64enc", quietly = TRUE)
+#' set.seed(123)
 #' data(east10)
 #' res <- bgmyc.singlephy(east10[[1]], mcmc = 100, burnin = 10, thinning = 10)
 #' plot.interactive.probmat(spec.probmat(res), east10[[1]])

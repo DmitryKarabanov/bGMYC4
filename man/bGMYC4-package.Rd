@@ -47,7 +47,11 @@ Useful links:
 Authors:
 \itemize{
   \item Dmitry Karabanov \email{dk@ibiw.ru} (\href{https://orcid.org/0000-0001-6008-7441}{ORCID})
-  \item Noah Reid \email{noah.reid@gmail.com} (Original author of bGMYC) [copyright holder]
+}
+
+Other contributors:
+\itemize{
+  \item Noah Reid \email{noah.reid@gmail.com} (Original author of bGMYC) [contributor, copyright holder]
 }
 
 }

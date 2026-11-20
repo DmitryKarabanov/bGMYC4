@@ -22,6 +22,7 @@ sample. GMYC assumes the two processes act on very different time scales
 threshold is indistinct and results unreliable.
 }
 \examples{
+set.seed(123)
 data(east10)
 res <- bgmyc.singlephy(east10[[1]], mcmc = 100, burnin = 10, thinning = 10)
 rates <- checkrates(res)

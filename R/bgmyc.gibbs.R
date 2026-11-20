@@ -14,6 +14,7 @@
 #'
 #' @return An object of class `"singlebgmyc"` (see [bgmyc.singlephy()]).
 #' @examples
+#' set.seed(123)
 #' data(east10)
 #' dat <- bgmyc.dataprep(east10[[1]])
 #' out <- bgmyc.gibbs(dat, m = 100, burnin = 10, thinning = 10,

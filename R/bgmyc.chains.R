@@ -15,13 +15,13 @@
 #' @examples
 #' data(east10)
 #' ch <- bgmyc.chains(east10[[1]], mcmc = 100, burnin = 10, thinning = 10,
-#'                    nchains = 2, seed = 1)
+#'                    nchains = 2, seed = 123)
 #' bgmyc.convergence(ch)
 #' @export
 bgmyc.chains <- function(phylo, mcmc, burnin, thinning,
                          py1 = 0, py2 = 2, pc1 = 0, pc2 = 2,
-                         t1 = 2, t2 = 51,
-                         scale = c(20, 10, 5), start = c(1, 0.5, 50),
+                         t1 = 2, t2 = NULL,
+                         scale = c(20, 10, 5), start = NULL,
                          sampler = bgmyc.gibbs, likelihood = bgmyc.lik,
                          prior = bgmyc.prior,
                          nchains = 4L, seed = NULL, cores = 1L,
@@ -40,8 +40,12 @@ bgmyc.chains <- function(phylo, mcmc, burnin, thinning,
   if (is.null(seed))
     message("NOTE: seed = NULL -> chains are not reproducible.")
 
-  dat <- bgmyc.dataprep(phylo)            # computed once, shared by all chains
+  dat <- bgmyc.dataprep(phylo)
   NNodes <- dat$tree$Nnode
+  if (is.null(t2))    t2 <- NNodes
+  if (is.null(start)) start <- c(max(1e-3, (py1 + py2) / 2),
+                                 max(1e-3, (pc1 + pc2) / 2),
+                                 max(2, (max(2, t1) + min(t2, NNodes)) / 2))
   th_lo <- max(2, t1); th_hi <- min(t2, NNodes)
   if (th_lo > th_hi) stop("Empty threshold range after clamping to [2, Nnode].")
 
@@ -148,8 +152,8 @@ bgmyc.convergence <- function(chains) {
     ESS_total     = round(ess_total, 1),
     ESS_min_chain = round(ess_min, 1),
     accept_mean   = c(round(colMeans(acc), 3), NA),
-    flag = ifelse(rhat > 1.05, "Rhat>1.05: run longer / tune scale",
-           ifelse(ess_total < 200, "ESS<200: run longer", "OK")),
+    flag = ifelse(!is.na(rhat) & rhat > 1.05, "Rhat>1.05: run longer / tune scale",
+           ifelse(!is.na(ess_total) & ess_total < 200, "ESS<200: run longer", "OK")),
     stringsAsFactors = FALSE
   )
   list(summary = summary, per_chain_accept = acc, per_chain_ess = ess,

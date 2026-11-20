@@ -8,7 +8,8 @@
 A \code{"multiPhylo"} list of 10 \code{"phylo"} objects with shared tip labels.
 }
 \source{
-Simulated data; tree estimation as in Reid & Carstens (2012).
+Simulated example data inherited from the original bGMYC package
+(Reid & Carstens 2012); tree estimation as in that study.
 }
 \usage{
 east10

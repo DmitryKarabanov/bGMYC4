@@ -44,17 +44,16 @@ In principle \code{pc < 1} mimics population decline and \code{pc > 1} growth, b
 because identical haplotypes must be excluded, a strict demographic
 interpretation is not possible.}
 
-\item{t1, t2}{Bounds of the uniform prior on the threshold parameter \code{t},
-which equals the number of delimited species (clusters + singleton tips).
-Use \verb{2 <= t1 <= t2 <= Nnode(tree)}; larger values are unreachable and merely
-truncate the effective prior.}
+\item{t1, t2}{Lower and upper bounds of the threshold prior. \code{t2 = NULL}
+(the default) means the full range \verb{[max(2, t1), Nnode]}; the effective
+prior is always clamped to \verb{[2, Nnode]}.}
 
 \item{scale}{Numeric(3): proposal widths for \code{py}, \code{pc} (mean-preserving gamma
 proposals; larger = more conservative) and \code{t} (rounded normal random walk;
 larger = more liberal). Tune via acceptance rates (target roughly 0.2--0.4).}
 
-\item{start}{Numeric(3): starting values \code{c(py, pc, t)}; must lie inside the
-priors, with \code{start[3]} in \verb{[2, Nnode(tree)]}.}
+\item{start}{Starting values for \verb{(py, pc, t)}. \code{NULL} (the default) uses
+the midpoint of each prior interval, which always lies inside the prior.}
 
 \item{likelihood}{Log-likelihood function; default \code{\link[=bgmyc.lik]{bgmyc.lik()}} (profile ML
 estimates of branching rates, Nee 2001).}
@@ -76,6 +75,7 @@ Hastings correction; \code{t} uses a symmetric rounded-normal random walk
 \code{seq(burnin + thinning, m, by = thinning)}.
 }
 \examples{
+set.seed(123)
 data(east10)
 dat <- bgmyc.dataprep(east10[[1]])
 out <- bgmyc.gibbs(dat, m = 100, burnin = 10, thinning = 10,

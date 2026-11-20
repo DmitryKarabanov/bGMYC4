@@ -32,6 +32,7 @@ probability of conspecificity with ANY member exceeds \code{ppcutoff}; clusters
 with overlapping memberships are merged.
 }
 \examples{
+set.seed(123)
 data(east10)
 res <- bgmyc.singlephy(east10[[1]], mcmc = 100, burnin = 10, thinning = 10)
 bgmyc.point(spec.probmat(res), ppcutoff = 0.5)

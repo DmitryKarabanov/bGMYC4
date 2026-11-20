@@ -10,6 +10,7 @@
 #' @param ... Unused.
 #' @return No return value; called for side effects.
 #' @examples
+#' set.seed(123)
 #' data(east10)
 #' res <- bgmyc.singlephy(east10[[1]], mcmc = 100, burnin = 10, thinning = 10)
 #' plot(spec.probmat(res), east10[[1]])
