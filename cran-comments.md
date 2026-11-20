@@ -18,8 +18,7 @@ This is a major update to the existing CRAN package bGMYC4 (4.1.6).
 - **Documentation:** Full migration to roxygen2; corrected bibliographic references
   (Reid & Carstens 2012 is BMC Evolutionary Biology 12:196, not Mol. Ecol. Res.);
   new section "Choosing ppcutoff" with empirical guidance.
-- **Dependencies:** `parallel` added to Imports; `future`/`future.apply` moved to Suggests
-  (the package itself does not use them; only the interactive script in `inst/scripts/` does).
+- **Dependencies:** `parallel` added to Imports.
 
 ### Test environments
 

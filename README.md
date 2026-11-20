@@ -101,8 +101,6 @@ install.packages("path/to/bGMYC4.tar.gz", repos = NULL, type = "source")
   - `plotly`, `base64enc`, `htmlwidgets` — interactive heatmaps and HTML export
   - `knitr`, `rmarkdown` — vignettes
   - `treeio`, `ggtree`, `dplyr` — BEAST annotation handling in the helper script
-  - `future`, `future.apply` — used **only** by the interactive script in `inst/scripts/`,
-    not by the package itself
 
 ---
 
@@ -219,8 +217,7 @@ res <- bgmyc.multiphylo(trees, mcmc = 10000, burnin = 1000, thinning = 100,
                         cores = 8, seed = 42)
 ```
 
-`bgmyc.multiphylo()` uses `parallel::makeCluster()`; it does **not** use the `future` backend,
-so `future::plan()` has no effect on it. Use the `cores` argument instead.
+`bgmyc.multiphylo()` uses `parallel::makeCluster()`. Use the `cores` argument.
 
 Post-processing cost depends on the number of **distinct thresholds**, not on the number of
 retained samples, which is why long chains and large tree sets remain fast.
@@ -250,7 +247,7 @@ retained samples, which is why long chains and large tree sets remain fast.
 
 ## Citation
 
-If you use `bGMYC4`, please cite **both** the package and the method:
+If you use `bGMYC4`, please cite:
 
 ```bibtex
 @Manual{bGMYC4,
@@ -259,18 +256,6 @@ If you use `bGMYC4`, please cite **both** the package and the method:
   year   = {2026},
   note   = {R package version 4.3.0},
   url    = {https://github.com/DmitryKarabanov/bGMYC4}
-}
-
-@Article{ReidCarstens2012,
-  title   = {Phylogenetic estimation error can decrease the accuracy of species delimitation:
-             a Bayesian implementation of the general mixed Yule-coalescent model},
-  author  = {Reid, Noah M. and Carstens, Bryan C.},
-  journal = {BMC Evolutionary Biology},
-  year    = {2012},
-  volume  = {12},
-  number  = {1},
-  pages   = {196},
-  doi     = {10.1186/1471-2148-12-196}
 }
 ```
 
@@ -286,7 +271,7 @@ Foundational work:
 
 ## License
 
-GPL (≥ 3). See `LICENSE` for details.
+GPL (≥ 3). See the DESCRIPTION file.
 
 ## Author
 

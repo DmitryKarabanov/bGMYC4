@@ -15,25 +15,3 @@ bibentry(
     "https://github.com/DmitryKarabanov/bGMYC4"
   )
 )
-
-bibentry(
-  bibtype = "Article",
-  title = "Phylogenetic estimation error can decrease the accuracy of species delimitation: a Bayesian implementation of the general mixed Yule-coalescent model",
-  author = c(
-    person("Noah M.", "Reid"),
-    person("Bryan C.", "Carstens")
-  ),
-  journal = "BMC Evolutionary Biology",
-  year = "2012",
-  volume = "12",
-  number = "1",
-  pages = "196",
-  doi = "10.1186/1471-2148-12-196",
-  url = "https://doi.org/10.1186/1471-2148-12-196",
-  textVersion = paste(
-    "Reid NM, Carstens BC (2012). Phylogenetic estimation error can decrease",
-    "the accuracy of species delimitation: a Bayesian implementation of the",
-    "general mixed Yule-coalescent model. BMC Evolutionary Biology, 12:196.",
-    "doi:10.1186/1471-2148-12-196"
-  )
-)

@@ -5,7 +5,7 @@ Title: Bayesian General Mixed Yule-Coalescent Model for Species
 Version: 4.3.0
 Authors@R: c(
     person("Noah", "Reid", email = "noah.reid@gmail.com",
-           role = c("aut", "cph"), comment = "Original author of bGMYC"),
+           role = c("ctb", "cph"), comment = "Original author of bGMYC"),
     person("Dmitry", "Karabanov", email = "dk@ibiw.ru",
            role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-6008-7441"))
@@ -35,12 +35,9 @@ Suggests:
     testthat (>= 3.0.0),
     knitr,
     rmarkdown,
-    htmltools,
     htmlwidgets,
     treeio,
     ggtree,
-    future,
-    future.apply,
     dplyr
 VignetteBuilder: knitr, rmarkdown
 URL: https://github.com/DmitryKarabanov/bGMYC4

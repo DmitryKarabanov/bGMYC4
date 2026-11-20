@@ -1,6 +1,6 @@
 ---
 title: "bGMYC4 Interactive Workflow"
-author: "Dmitry Karabanov & Qwen"
+author: "Dmitry Karabanov"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >

@@ -37,6 +37,10 @@
 - `bgmyc.dataprep()` explicitly handles the root node.
 - `plot.interactive.probmat()` protects graphics devices and removes unused
   arguments.
+- `t2` and `start` now default to `NULL` (adaptive). `t2 = NULL` means the
+  full threshold range `[max(2, t1), Nnode]`; `start = NULL` uses the prior
+  midpoint. This affects only calls that relied on the old defaults
+  `t2 = 51` and `start = c(1, 0.5, 50)`; explicit arguments behave as before.
 
 ## BUG FIXES
 
